@@ -48,7 +48,7 @@ predict <- function(model_name, X, pred_type = 'exact') {
 		del = TRUE
 	}
 
-	r = content(POST(url = url, body = body), as='text')
+	r = httr::content(httr::POST(url = url, body = body), as='text')
 
 	if(del) {
 		file.remove(paste0('./tmp_data_csv-', model_name))
