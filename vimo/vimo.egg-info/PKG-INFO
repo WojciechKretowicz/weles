@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: vimo
+Version: 0.1
+Summary: The Python client package for communication with model governance base "vimo".
+Home-page: https://github.com/WojciechKretowicz/vimo
+Author: Wojciech Kretowicz
+Author-email: wojtekkretowicz@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
