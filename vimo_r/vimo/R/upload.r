@@ -24,7 +24,7 @@
 #' upload(model, "example_model", iris, "example_training_data")
 #'
 #' @export
-upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc = NA, dataset_desc = NA) {
+upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc, dataset_desc) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
@@ -94,19 +94,17 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		del_train_data = T
 	}
 
-	if(!is.na(model_desc)) {
 	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
 		body[['model_desc']] = paste0(readLines(model_desc), collapse='')
 	} else if(class(model_desc) == 'character') {
 		body[['model_desc']] = model_desc
-	}}
+	}
 
-	if(!is.na(dataset_desc)) {
 	if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
 		body[['dataset_desc']] = paste0(readLines(dataset_desc), collapse='')
 	} else if(class(dataset_desc) == 'character') {
 		body[['dataset_desc']] = dataset_desc
-	}}
+	}
 		
 
 	# uploading requirements file
