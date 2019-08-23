@@ -54,7 +54,7 @@ In this moment *model* is being uploaded to the **vimo**. If requested environme
 
 ### Summary
 
-You can also pass your model as the path (must contain **/** sign to *Python* pickle. Training data parameter can be a path to *.csv* file or *hash* of already uploaded dataset in the **vimo**.
+You can also pass your model as the path (must contain **/** sign to *Python* pickle. Training data parameter can be a path to *.csv* file or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data.
 
 ## Reading an info about model
 
