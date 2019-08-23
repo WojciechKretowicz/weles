@@ -11,7 +11,13 @@ git clone https://github.com/WojciechKretowicz/vimo.git
 cd vimo/vimo_python
 pip install .
 ```
-# Usage
+## R
+
+```
+devtools::install_github("WojciechKretowicz/vimo/vimo_r/vimo")
+```
+
+# Usage in Python
 
 ## Uploading model
 First you need to have a trained scikit-learn model.
@@ -26,7 +32,7 @@ model = RandomForestClassifier(n_estimators = 777)
 model.fit(data.data, data.target)
 ```
 
-To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, training dataset with target column as last one with column names and its name.
+To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, requirements file, training dataset with target column as last one with column names and its name.
 
 So first let's prepare our data.
 
@@ -88,4 +94,64 @@ Be aware that some models may require from you exactly the same column names in 
 
 ```
 columns = comm.model_info("example_model")['data_info']['columns']
+```
+
+# Usage in R
+
+## Uploading model
+First you need to have a trained mlr model.
+
+### Example
+```
+library(mlr)
+
+task = makeClassifTask(data = iris, target = 'Species')
+model = makeLearner("clasif.randomForest")
+model = train(model, task)
+```
+
+To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, training dataset with target column as last one with column names and its name. Names should be unique.
+
+```
+library('vimo')
+
+upload(model, "example_model", iris, "example_data")
+```
+
+In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your R sesion will be suspended. Multithreading is being under development.
+
+### Summary
+
+You can also pass your model as the path (must contain **/** sign to *R* *.rds* file. Training data parameter can be a path to *.csv* file or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data.
+
+## Reading an info about model
+
+If you want to read an info about the model already uploaded in **vimo** you can run:
+
+```
+library('vimo')
+
+model_info("example_model")
+```
+
+*"example_model"* is a name of **vimo** model.
+
+Returned value is a *R* named list containing all information about the model.
+
+## Making predictions
+
+If you want to make a prediction, type:
+
+```
+library('vimo')
+
+predict("example_model", data)
+```
+
+*"example_model"* is the name of **vimo** model, *data* is the data frame with named columns without target column, or path to *.csv* (must contain **/** sign) file or *hash* of already uploaded data.
+
+Be aware that some models may require from you exactly the same column names in passed data. You may easily obtain them with:
+
+```
+columns = model_info("example_model")$data_info$columns
 ```
