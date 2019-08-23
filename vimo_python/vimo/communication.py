@@ -7,7 +7,7 @@ import platform
 import re
 from io import StringIO
 
-def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc = None, dataset_desc = None):
+def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc, dataset_desc):
 	"""
 	Function uploads model, the training set.
 
@@ -88,17 +88,15 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 		# setting flag
 		del_train_data = True
 
-	if model_desc is not None:
-		if type(model_desc) == str and reg.search(model_desc) is not None:
-			info['model_desc'] = open(model, 'rb').read()
-		elif type(model_desc) == str:
-			info['model_desc'] = model_desc
+	if type(model_desc) == str and reg.search(model_desc) is not None:
+		info['model_desc'] = open(model, 'rb').read()
+	elif type(model_desc) == str:
+		info['model_desc'] = model_desc
 
-	if dataset_desc is not None:
-		if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
-			info['dataset_desc'] = open(model, 'rb').read()
-		elif type(dataset_desc) == str:
-			info['dataset_desc'] = dataset_desc
+	if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
+		info['dataset_desc'] = open(model, 'rb').read()
+	elif type(dataset_desc) == str:
+		info['dataset_desc'] = dataset_desc
 
 	# uploading requirements file
 	files['requirements'] = open(requirements_file, 'rb')
