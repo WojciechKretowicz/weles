@@ -31,7 +31,7 @@ predict <- function(model_name, X, pred_type = 'exact') {
 		body[['hash']] = X
 
 		# request
-		POST(url = url, body = body)
+		#httr::POST(url = url, body = body)
 	} else if(class(X) == "character") {
 		# case when X is a path
 		body[['is_hash']] =  0
@@ -48,7 +48,7 @@ predict <- function(model_name, X, pred_type = 'exact') {
 		del = TRUE
 	}
 
-	r = content(POST(url = url, body = body), as='text')
+	r = httr::content(httr::POST(url = url, body = body), as='text')
 
 	if(del) {
 		file.remove(paste0('./tmp_data_csv-', model_name))

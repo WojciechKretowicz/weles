@@ -130,7 +130,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name) {
 
 	body[['train_data_name']] = train_dataset_name
 
-	POST(url = 'http://192.168.137.64/models/post', body = body)
+	httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
 	# removing temporary files
 	if(del_model) {
