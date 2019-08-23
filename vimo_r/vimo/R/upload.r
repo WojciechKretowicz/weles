@@ -24,7 +24,7 @@
 #' upload(model, "example_model", iris, "example_training_data")
 #'
 #' @export
-upload <- function(model, model_name, train_dataset, train_dataset_name, test_dataset = NA, test_dataset_name = NA) {
+upload <- function(model, model_name, train_dataset, train_dataset_name) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
@@ -48,17 +48,10 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, test_da
 	architecture = strsplit(ses[[1]]$system, ', ')[[1]][1]
 	processor = Sys.info()[5]
 
-	if(is.na(test_dataset)) {
-		is_test_dataset = 0
-	} else {
-		is_test_dataset = 1
-	}
-
 	is_sessionInfo = 1
 
 	del_model = F
 	del_train_data = F
-	del_test_data = F
 
 	# uploading model
 	if(class(model) == "character") {
@@ -83,7 +76,6 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, test_da
 		body[['train_dataset_hash']] = train_dataset
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
-		#body = c(body, list('train_dataset' = upload_file(train_dataset)))
 
 		body[['train_dataset']] <- upload_file(train_dataset)
 
@@ -103,35 +95,20 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, test_da
 		del_train_data = T
 	}
 
-	# uploading train_dataset
-	if(is.na(test_dataset)) {
-		# case when test_dataset is not provided
-		body[['is_test_dataset']] = 0
-		body[['test_dataset_hash']] = 0
-	}
-	else if(class(test_dataset) == "character" && !grepl("/", test_dataset)) {
-		# case when test_dataset is a hash of already uploaded dataset
-		body[['test_dataset_hash']] = test_dataset
-		body[['is_test_dataset']] = 1
-	}
-	else if(class(test_dataset) == "character") {
-		# case when test_dataset is a path to csv file
-		body[['test_dataset']] = upload_file(test_dataset)
-		body[['is_test_dataset']] = 1
-		body[['is_test_dataset_hash']] = 0
-	}
-	else {
-		# case when test_dataset is a matrix
+	if(!is.na(model_desc)) {
+	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
+		body[['model_desc'] = paste0(readLines(model_desc), collapse='')
+	} else if(class(model_desc) == 'character') {
+		body[['model_desc'] = model_desc
+	}}
 
-		# creating temporary file
-		write.table(test_dataset, './tmp_train_data_csv', col.names=F, sep=',')
-
-		# uploading dataset
-		body[['test_dataset']] = upload_file('tmp_test_data_csv')
-
-		# setting flag
-		del_test_data = T
-	}
+	if(!is.na(dataset_desc)) {
+	if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
+		body[['dataset_desc'] = paste0(readLines(dataset_desc), collapse='')
+	} else if(class(dataset_desc) == 'character') {
+		body[['dataset_desc'] = dataset_desc
+	}}
+		
 
 	# uploading requirements file
 	body[['requirements']] = upload_file('.tmp-requirements.txt')
@@ -152,7 +129,6 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, test_da
 	body[['processor']] = processor
 
 	body[['train_data_name']] = train_dataset_name
-	body[['test_data_name']] = test_dataset_name
 
 	POST(url = 'http://192.168.137.64/models/post', body = body)
 
@@ -162,9 +138,6 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, test_da
 	}
 	if(del_train_data) {
 		file.remove('./tmp_train_data_csv')
-	}
-	if(del_test_data) {
-		file.remove('./tmp_test_data_csv')
 	}
 }
 

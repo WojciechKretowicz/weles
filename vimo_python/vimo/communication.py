@@ -7,15 +7,14 @@ import platform
 import re
 from io import StringIO
 
-def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, test_dataset = None, test_dataset_name = None):
+def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc = None, dataset_desc = None):
 	"""
-	Function uploads model, the training set and optionally test_dataset to the base.
+	Function uploads model, the training set.
 
 	model - model object or path to model pickle
 	model_name - name of the model, string
 	requirements_file - python style requirements, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
 	train_dataset - matrix or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
-	test_dataset - optional argument, matrix or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
 	"""
 
 	# url to post
@@ -35,13 +34,6 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 	info['model_name'] = model_name
 	info['train_data_name'] = train_dataset_name
 
-	# flag if test_dataset was provided
-	if test_dataset is None:
-		info['is_test_dataset'] = 0
-		info['test_data_name'] = '0'
-	else:
-		info['is_test_dataset'] = 1
-		info['test_data_name'] = test_dataset_name
 
 	# init of flag if train_dataset is a hash
 	info['train_dataset_hash'] = 0
@@ -49,7 +41,6 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 	# init of flags what temporary file should be removed at the end of function
 	del_model = False
 	del_train_data = False
-	del_test_data = False
 
 	# uploading model
 	if type(model) == str:
@@ -68,7 +59,7 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 		# setting flag
 		del_model = True
 
-	# creating regexp to findout if the train_dataset and test_dataset are paths or ids 
+	# creating regexp to findout if the train_dataset is a path or id
 	reg = re.compile("/")
 
 	# uploading train dataset
@@ -97,38 +88,17 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 		# setting flag
 		del_train_data = True
 
-	# uploading train_dataset
-	if test_dataset is None:
-		# case when test_dataset is not provided
+	if model_desc is not None:
+		if type(model_desc) == str and reg.search(model_desc) is not None:
+			info['model_desc'] = open(model, 'rb').read()
+		elif type(model_desc) == str:
+			info['model_desc'] = model_desc
 
-		info['is_test_dataset'] = 0
-		info['test_dataset_hash'] = 0
-
-	elif type(test_dataset) == str and reg.search(test_dataset) is None:
-		# case when test_dataset is a hash of already uploaded dataset
-
-		info['test_dataset_hash'] = test_dataset
-		info['is_test_dataset'] = 1
-
-	elif type(test_dataset) == str:
-		# case when test_dataset is a path to csv file
-
-		files['test_dataset'] = open(test_dataset, 'rb')
-		info['is_test_dataset'] = 1
-	else:
-		# case when test_dataset is a matrix
-
-		# convertion to pandas data frame
-		test_dataset = pd.DataFrame(test_dataset)
-
-		# creating temporary file
-		test_dataset.to_csv('./tmp_test_data_csv')
-
-		# uploading dataset
-		files['test_dataset'] = open('./tmp_test_data_csv', 'rb')
-
-		# setting flag
-		del_test_data = True
+	if dataset_desc is not None:
+		if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
+			info['dataset_desc'] = open(model, 'rb').read()
+		elif type(dataset_desc) == str:
+			info['dataset_desc'] = dataset_desc
 
 	# uploading requirements file
 	files['requirements'] = open(requirements_file, 'rb')
@@ -144,8 +114,6 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 		os.remove('.tmp_model.pkl')
 	if del_train_data:
 		os.remove('./tmp_train_data_csv')
-	if del_test_data:
-		os.remove('./tmp_test_data_csv')
 
 def predict(model_name, X, pred_type = 'exact'):
 	"""
