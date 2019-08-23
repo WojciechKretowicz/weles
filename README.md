@@ -55,7 +55,7 @@ Now we are ready to push our model to the base. Its name has to be unique in the
 ```
 from vimo import communication as comm
 
-comm.upload(model, "example_model", "requirements.txt" train_data_to_upload, "example_data")
+comm.upload(model, "example_model", "requirements.txt" train_data_to_upload, "example_data", "Description of the model", "Description of the dataset")
 ```
 
 In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your Python sesion will be suspended. Multithreading is being under development.
@@ -115,14 +115,14 @@ To upload the model to the base you need to import client package and pass class
 ```
 library('vimo')
 
-upload(model, "example_model", iris, "example_data")
+upload(model, "example_model", iris, "example_data", "Description of the model", "Description of the dataset")
 ```
 
 In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your R sesion will be suspended. Multithreading is being under development.
 
 ### Summary
 
-You can also pass your model as the path (must contain **/** sign to *R* *.rds* file. Training data parameter can be a path to *.csv* file or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data.
+You can also pass your model as the path (must contain **/** sign to *R* *.rds* file. Training data parameter can be a path to *.csv* file or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data. Please, have loaded in your namespace only packages that are required to make a model.
 
 ## Reading an info about model
 
