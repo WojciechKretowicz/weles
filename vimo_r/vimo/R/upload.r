@@ -1,3 +1,29 @@
+#' @title Upload model to **vimo**
+#'
+#' @description
+#' This tool is allows you to upload your *mlr* model to model governance base **vimo**.
+#'
+#' @param model mlr learner, or path to the mlr model written as learner
+#' @param model_name name of the model that will be visible in **vimo**
+#' @train_dataset training dataset with named columns and target column as the last one, or path to *.csv* file (must contain **/** sign) or hash of already
+#' uploaded data
+#' @train_dataset_name name of the training dataset that will be visible in the database
+#'
+#' @references
+#' \href{http://192.168.137.64/models}{\bold{models}}
+#' \href{http://192.168.137.64/datasets}{\bold{datasets}}
+#'
+#' @examples
+#' library("vimo")
+#' library("mlr")
+#'
+#' task = makeClassifTask(data = iris, target = 'Species')
+#' model = makeLearner("classif.randomForest")
+#' model = train(model, task)
+#'
+#' upload(model, "example_model", iris, "example_training_data")
+#'
+#' @export
 upload <- function(model, model_name, train_dataset, train_dataset_name, test_dataset = NA, test_dataset_name = NA) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
