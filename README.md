@@ -4,9 +4,11 @@ The Python client package for communication with model governance base **vimo**.
 
 # Installation
 
+## Python
+
 ```
 git clone https://github.com/WojciechKretowicz/vimo.git 
-cd vimo
+cd vimo/vimo_python
 pip install .
 ```
 # Usage
