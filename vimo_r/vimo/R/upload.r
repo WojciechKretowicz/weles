@@ -56,7 +56,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	# uploading model
 	if(class(model) == "character") {
 		# case when model is a path
-		body = list('model' = upload_file(model))
+		body = list('model' = httr::upload_file(model))
 	} else {
 		# case when model is an object
 
@@ -64,7 +64,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		saveRDS(model, '.tmp_model')
 
 		# uploading model
-		body = list('model' = upload_file('.tmp_model'))
+		body = list('model' = httr::upload_file('.tmp_model'))
 
 		# setting flag
 		del_model = T
@@ -77,9 +77,8 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
 
-		body[['train_dataset']] <- upload_file(train_dataset)
+		body[['train_dataset']] <- httr::upload_file(train_dataset)
 
-		#body['traindataset'] = upload_file
 		body[['train_dataset_hash']] = 0
 	} else {
 		# case when train_dataset is a matrix
@@ -88,7 +87,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		write.table(train_dataset, './tmp_train_data_csv', col.names=T, row.names=F, sep=',')
 
 		# uploading dataset
-		body[['train_dataset']] = upload_file('./tmp_train_data_csv')
+		body[['train_dataset']] = httr::upload_file('./tmp_train_data_csv')
 		body[['train_dataset_hash']]= 0
 
 		# setting flag
