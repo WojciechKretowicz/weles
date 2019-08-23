@@ -24,7 +24,7 @@
 #' upload(model, "example_model", iris, "example_training_data")
 #'
 #' @export
-upload <- function(model, model_name, train_dataset, train_dataset_name) {
+upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc = NA, dataset_desc = NA) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
