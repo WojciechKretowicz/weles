@@ -110,12 +110,12 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		
 
 	# uploading requirements file
-	body[['requirements']] = upload_file('.tmp-requirements.txt')
+	body[['requirements']] = httr::upload_file('.tmp-requirements.txt')
 
 	# uploading sessionInfo
 	body[['is_sessionInfo']] = 1
 	saveRDS(ses, '.tmp-ses')
-	body[['sessionInfo']] = upload_file('.tmp-ses')
+	body[['sessionInfo']] = httr::upload_file('.tmp-ses')
 
 	body[['model_name']] = model_name
 	body[['system']] = system
