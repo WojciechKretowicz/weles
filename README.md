@@ -1,6 +1,6 @@
 # vimo
 
-The Python client package for communication with model governance base **vimo**. **vimo** supports virtualization with all versions of **Python** and **R** languages from version **3.0** and package versions. At this moment supports all scikit-learn models in your environment and all models added to the base.
+The Python client package for communication with model governance base **vimo**. **vimo** supports virtualization with all versions of **Python** and **R** languages from version **3.0** and package versions. At this moment supports all scikit-learn models in your environment and all models added to the base. During the development **vimo** is only accessible via MINI network. However you can access it from other places via ssh, if you have account at this network.
 
 # Installation
 
@@ -39,7 +39,7 @@ So first let's prepare our data.
 ```
 import pandas as pd
 
-train_data_to_upload = pd.DataFrame(data.data, data.feature_names)
+train_data_to_upload = pd.DataFrame(data.data, colums=data.feature_names)
 train_data_to_upload['target'] = data.target
 ```
 Due to our respect for your privacy we do not investigate your environment. To allow us to make a virtualization please run in command line:
