@@ -46,7 +46,7 @@ predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) 
 			for(i in 1:length(col)) {
 				columns[col[[i]][[1]]] = col[[i]][[2]]
 			}
-			colnames(X) = columns
+			colnames(X) = columns[-length(col)]
 		}
 
 		write.table(X, paste0('./tmp_data_csv-', model_name), row.names=F, col.names=T, sep=',')

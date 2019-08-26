@@ -155,7 +155,8 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 			columns = model_info(model_name)['data_info']['columns']
 			c = []
 			for col in columns:
-				c.append(columns[1])
+				c.append(col[1])
+			c = c[0:-1]
 			X.columns = c
 
 		# creating temporary file
