@@ -16,7 +16,7 @@
 #' predict("example_model", iris[,-5])
 #'
 #' @export
-predict <- function(model_name, X, pred_type = 'exact') {
+predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
 	# url
 	url = paste0('http://192.168.137.64/models/', model_name, '/predict/', pred_type)
 
@@ -39,6 +39,16 @@ predict <- function(model_name, X, pred_type = 'exact') {
 	} else {
 		# case when X is an object
 		# creating temporary file
+
+		if(prepare_columns) {
+			col = model_info(model_name)
+			columns = rep('a', length(col))
+			for(i in 1:length(col)) {
+				columns[col[[i]][[1]]] = col[[i]][[2]]
+			}
+			colnames(X) = columns
+		}
+
 		write.table(X, paste0('./tmp_data_csv-', model_name), row.names=F, col.names=T, sep=',')
 
 		body[['is_hash']] =  0

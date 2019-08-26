@@ -115,13 +115,14 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 	if del_train_data:
 		os.remove('./tmp_train_data_csv')
 
-def predict(model_name, X, pred_type = 'exact'):
+def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""
 	Function uses model in the database to make a prediction on X.
 
 	model_name - name of the model in the database
 	X - numpy array or path to csv file (must containt '/') or hash of already uploaded dataset
 	pred_type - type of the prediction: exact/prob
+	prepare_columns - if true and if X is an object then take exact columns from model in database
 	"""
 
 	# url
@@ -151,6 +152,13 @@ def predict(model_name, X, pred_type = 'exact'):
 
 		# conversion to pandas data frame
 		X = pd.DataFrame(X)
+
+		if prepare_columns:
+			columns = model_info(model_name)['data_info']['columns']
+			c = []
+			for col in columns:
+				c.append(columns[1])
+			X.columns = c
 
 		# creating temporary file
 		X.to_csv('./tmp_data_csv-' + model_name, index = False)
