@@ -24,7 +24,7 @@
 #' upload(model, "example_model", iris, "example_training_data")
 #'
 #' @export
-upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc = NA, dataset_desc = NA) {
+upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc, dataset_desc) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
@@ -56,7 +56,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	# uploading model
 	if(class(model) == "character") {
 		# case when model is a path
-		body = list('model' = upload_file(model))
+		body = list('model' = httr::upload_file(model))
 	} else {
 		# case when model is an object
 
@@ -64,7 +64,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		saveRDS(model, '.tmp_model')
 
 		# uploading model
-		body = list('model' = upload_file('.tmp_model'))
+		body = list('model' = httr::upload_file('.tmp_model'))
 
 		# setting flag
 		del_model = T
@@ -77,9 +77,8 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
 
-		body[['train_dataset']] <- upload_file(train_dataset)
+		body[['train_dataset']] <- httr::upload_file(train_dataset)
 
-		#body['traindataset'] = upload_file
 		body[['train_dataset_hash']] = 0
 	} else {
 		# case when train_dataset is a matrix
@@ -88,35 +87,33 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 		write.table(train_dataset, './tmp_train_data_csv', col.names=T, row.names=F, sep=',')
 
 		# uploading dataset
-		body[['train_dataset']] = upload_file('./tmp_train_data_csv')
+		body[['train_dataset']] = httr::upload_file('./tmp_train_data_csv')
 		body[['train_dataset_hash']]= 0
 
 		# setting flag
 		del_train_data = T
 	}
 
-	if(!is.na(model_desc)) {
 	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
 		body[['model_desc']] = paste0(readLines(model_desc), collapse='')
 	} else if(class(model_desc) == 'character') {
 		body[['model_desc']] = model_desc
-	}}
+	}
 
-	if(!is.na(dataset_desc)) {
 	if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
 		body[['dataset_desc']] = paste0(readLines(dataset_desc), collapse='')
 	} else if(class(dataset_desc) == 'character') {
 		body[['dataset_desc']] = dataset_desc
-	}}
+	}
 		
 
 	# uploading requirements file
-	body[['requirements']] = upload_file('.tmp-requirements.txt')
+	body[['requirements']] = httr::upload_file('.tmp-requirements.txt')
 
 	# uploading sessionInfo
 	body[['is_sessionInfo']] = 1
 	saveRDS(ses, '.tmp-ses')
-	body[['sessionInfo']] = upload_file('.tmp-ses')
+	body[['sessionInfo']] = httr::upload_file('.tmp-ses')
 
 	body[['model_name']] = model_name
 	body[['system']] = system
