@@ -130,7 +130,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	body[['user_name']] = user_name
 	body[['password']] = password
 
-	httr::POST(url = 'http://192.168.137.64/models/post', body = body)
+	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
 	# removing temporary files
 	if(del_model) {
@@ -139,5 +139,7 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 	if(del_train_data) {
 		file.remove('./tmp_train_data_csv')
 	}
+
+	r
 }
 

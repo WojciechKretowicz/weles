@@ -44,7 +44,7 @@ predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) 
 			col = model_info(model_name)$data_info$columns
 			columns = rep('a', length(col))
 			for(i in 1:length(col)) {
-				columns[col[[i]][[1]]] = col[[i]][[2]]
+				columns[col[[i]][[1]] + 1] = col[[i]][[2]]
 			}
 			colnames(X) = columns[-length(col)]
 		}

@@ -119,6 +119,8 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 	if del_train_data:
 		os.remove('./tmp_train_data_csv')
 
+	return r.text
+
 def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""
 	Function uses model in the database to make a prediction on X.
