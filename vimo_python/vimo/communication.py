@@ -7,7 +7,7 @@ import platform
 import re
 from io import StringIO
 
-def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc, dataset_desc):
+def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc, dataset_desc, user_name, password):
 	"""
 	Function uploads model, the training set.
 
@@ -104,6 +104,12 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 	# setting session info flag
 	info['is_sessionInfo'] = 0
 
+	# user_name
+	info['user_name'] = user_name
+
+	# password
+	info['password'] = password
+
 	# creating request
 	r = requests.post(url, files = files, data = info)
 
@@ -176,3 +182,6 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 def model_info(model_name):
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	return r.json()
+
+def create_user(user_name, password, mail):
+	requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
