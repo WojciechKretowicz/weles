@@ -24,7 +24,7 @@
 #' upload(model, "example_model", iris, "example_training_data")
 #'
 #' @export
-upload <- function(model, model_name, train_dataset, train_dataset_name, model_desc, dataset_desc, user_name, password) {
+upload <- function(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
@@ -129,6 +129,10 @@ upload <- function(model, model_name, train_dataset, train_dataset_name, model_d
 
 	body[['user_name']] = user_name
 	body[['password']] = password
+
+	tags = as.list(tags)
+	names(tags) = rep('tags', length(tags))
+	body = c(body, tags)
 
 	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
