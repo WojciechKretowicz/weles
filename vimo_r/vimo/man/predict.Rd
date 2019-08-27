@@ -4,7 +4,7 @@
 \alias{predict}
 \title{Make a prediction using **vimo** model}
 \usage{
-predict(model_name, X, pred_type = "exact")
+predict(model_name, X, pred_type = "exact", prepare_columns = TRUE)
 }
 \arguments{
 \item{model_name}{name of the model in **vimo**}

@@ -4,8 +4,8 @@
 \alias{upload}
 \title{Upload model to **vimo**}
 \usage{
-upload(model, model_name, train_dataset, train_dataset_name,
-  test_dataset = NA, test_dataset_name = NA)
+upload(model, model_name, model_desc, tags, train_dataset,
+  train_dataset_name, dataset_desc, user_name, password)
 }
 \arguments{
 \item{model}{mlr learner, or path to the mlr model written as learner}

@@ -198,4 +198,5 @@ def create_user(user_name, password, mail):
 	requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
 
 def search_model(tags):
-	requests.get('http://192.168.137.64/models/search', data = {'tags': tags})
+	r = requests.get('http://192.168.137.64/models/search', data = {'tags': tags})
+	return r.json()['models']
