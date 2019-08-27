@@ -127,7 +127,7 @@ To upload your model you need to create your account.
 ```
 library(vimo)
 
-create_account('Example user', 'example password', 'example_mail@gmail.com')
+create_user('Example user', 'example password', 'example_mail@gmail.com')
 ```
 
 In response you will get information if your account was created succesfully.
