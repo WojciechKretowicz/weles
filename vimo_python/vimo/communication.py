@@ -7,14 +7,20 @@ import platform
 import re
 from io import StringIO
 
-def upload(model, model_name, requirements_file, train_dataset, train_dataset_name, model_desc, dataset_desc, user_name, password):
+def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
 	"""
-	Function uploads model, the training set.
+	Function uploads model and the training set.
 
-	model - model object or path to model pickle
-	model_name - name of the model, string
-	requirements_file - python style requirements, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
+	model - model object or path to the model pickle
+	model_name - name of the model that will be visible in the vimo, string
+	model_desc - description of the model, string
+	tags - list of tags
 	train_dataset - matrix or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
+	train_datset_name - name of the dataset that will be visible in the vimo, string
+	dataset_desc - description of the datasets
+	requirements_file - python style requirements, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
+	user_name - your user name
+	password - your password
 	"""
 
 	# url to post
@@ -109,6 +115,9 @@ def upload(model, model_name, requirements_file, train_dataset, train_dataset_na
 
 	# password
 	info['password'] = password
+
+	# tags
+	info['tags'] = tags
 
 	# creating request
 	r = requests.post(url, files = files, data = info)
