@@ -9,8 +9,12 @@ from io import StringIO
 
 def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
 	"""
-	Function uploads model and the training set.
+	Function 'upload'
 
+	...::: DESCRIPTION :::...
+	Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
+
+	...::: PARAMS :::...
 	model - model object or path to the model pickle
 	model_name - name of the model that will be visible in the vimo, string
 	model_desc - description of the model, string
@@ -21,6 +25,12 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 	requirements_file - python style requirements, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
 	user_name - your user name
 	password - your password
+
+	...::: RETURN :::...
+	Returns an information if uploading the model was successful.
+
+	...::: EXAMPLES :::...
+
 	"""
 
 	# url to post
@@ -132,12 +142,19 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 
 def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""
+	Function predict
+
+	...::: DESCRIPTION :::...
 	Function uses model in the database to make a prediction on X.
 
+	...::: PARAMS :::...
 	model_name - name of the model in the database
-	X - numpy array or path to csv file (must containt '/') or hash of already uploaded dataset
+	X - array-like or path to csv file (must containt '/') or hash of already uploaded dataset, must have column names if prepare_columns is set to False
 	pred_type - type of the prediction: exact/prob
-	prepare_columns - if true and if X is an object then take exact columns from model in database
+	prepare_columns - if true and if X is an object then take column names from model in the database
+
+	...::: RETURN :::...
+	Returns a pandas data frame with made predictions.
 	"""
 
 	# url
@@ -191,12 +208,53 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	return pd.read_csv(StringIO(r.text), header=None)
 
 def model_info(model_name):
+	"""
+	Function model_ino
+
+	...::: DESCRIPTION :::...
+	Take all metadata about the model from vimo. It will return a dict.
+
+	...::: PARAMS :::...
+	model_name - name of the model in the vimo base
+
+	...::: RETURN :::...
+	Dict with fields:
+		model_info
+		data_info
+	"""
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	return r.json()
 
 def create_user(user_name, password, mail):
-	requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
+	"""
+	Function create_user
+
+	...::: DESCRIPTION :::...
+	Function creates new user in the vimo base.
+
+	...::: PARAMS :::...
+	user_name - your user name, has to be unique, if such user already exists you will get such information in response
+	password - your password, passwords are hashed
+	mail - you mail
+
+	...::: RETURN :::...
+	Information if creating account was successful.
+	"""
+	r = requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
+	return r.text
 
 def search_model(tags):
+	"""
+	Function search_model
+
+	...::: DESCRIPTION :::...
+	Search vimo base for models with specific tags.
+
+	...::: PARAMS :::...
+	tags - list of tags
+
+	...::: RETURN :::...
+	Returns a list of models that have at least one common tag with that provided in parameter 'tags'
+	"""
 	r = requests.get('http://192.168.137.64/models/search', data = {'tags': tags})
 	return r.json()['models']
