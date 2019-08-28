@@ -114,7 +114,7 @@ You can also search for model in **vimo** with tags. Just type:
 ```
 from vimo import communication as comm
 
-comm.search_model(['example', 'easy'])
+comm.search_model(row = '>1000;<10000;', column='=12;', user='Example user', tags = ['example', 'easy'])
 ```
 
 You will get all models having at least one of these tags.
@@ -199,7 +199,7 @@ Just type:
 ```
 library(vimo)
 
-search_model(['example', 'easily'])
+search_model(row = '>1000;<10000;', column='=12;', user='Example user', tags = c('example', 'easily'))
 ```
 
 You will receive in response all models with at least one of these tags.
