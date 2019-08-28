@@ -4,7 +4,8 @@
 \alias{search_model}
 \title{Find model that interests you the most}
 \usage{
-search_model(tags)
+search_model(row = NA, column = NA, missing = NA, classes = NA,
+  owner = NA, tags = c())
 }
 \arguments{
 \item{tags}{vector of tags, should be strings}

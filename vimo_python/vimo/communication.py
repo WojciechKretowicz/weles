@@ -259,7 +259,7 @@ def create_user(user_name, password, mail):
 
 def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None):
 	"""
-	Search vimo base for models with specific tags.
+	Search vimo base for models with specific tags. If all parameters are set to None, then returns all models' name in vimo.
 
 	Params
 	------
@@ -289,6 +289,6 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 	list
 		Returns a list of models' names that have at least one common tag with that provided in parameter 'tags'
 	"""
-	data = {'rows': row, 'colum': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags}
+	data = {'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags}
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
