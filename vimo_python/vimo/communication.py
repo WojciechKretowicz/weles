@@ -257,13 +257,31 @@ def create_user(user_name, password, mail):
 	r = requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
 	return r.text
 
-def search_model(tags):
+def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None):
 	"""
 	Search vimo base for models with specific tags.
 
 	Params
 	------
-	list
+	row : string
+		string describing how many rows should have training dataset
+		examples:
+			row = '<101;'; row = '>120;'; row = '>100;<200;'
+	column : string
+		string describing how many columns should have training dataset
+		examples:
+			column = '<101;'; column = '>120;'; column = '>100;<200;'
+	missing : string
+		string descibing how many missing values should have training dataset
+		examples:
+			missing = '=0;'; missing = '>120;'; missing = '<10001;'; missing = '>100;<200;'
+	classes : string
+		string descibing how many classes should have training dataset
+		examples:
+			classes = '=2;'; classes = '<3;'; classes = '>2;'; classes = '>2;<11;'
+	owner : string
+		owner's user name
+	tags : list
 		list of tags, all should be strings
 
 	Returns
@@ -271,5 +289,6 @@ def search_model(tags):
 	list
 		Returns a list of models' names that have at least one common tag with that provided in parameter 'tags'
 	"""
-	r = requests.get('http://192.168.137.64/models/search', data = {'tags': tags})
+	data = {'rows': row, 'colum': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags}
+	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
