@@ -10,6 +10,9 @@
 \arguments{
 \item{model_name}{name of the model in **vimo**}
 
+\item{X}{data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
+if X is an object and prepare_columns is True, columns' names will be fetched automatically}
+
 \item{pred_type}{type of prediction, 'exact' or 'prob'}
 
 \item{prepare_columns}{if X is an object then columns' names will be fetched automatically}

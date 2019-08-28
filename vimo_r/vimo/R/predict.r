@@ -4,7 +4,7 @@
 #' This tool allows you to make a prediction with model in **vimo**.
 #'
 #' @param model_name name of the model in **vimo**
-#' @X data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
+#' @param X data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
 #' if X is an object and prepare_columns is True, columns' names will be fetched automatically
 #' @param pred_type type of prediction, 'exact' or 'prob'
 #' @param prepare_columns if X is an object then columns' names will be fetched automatically

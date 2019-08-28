@@ -8,19 +8,35 @@ search_model(row = NA, column = NA, missing = NA, classes = NA,
   owner = NA, tags = c())
 }
 \arguments{
-\item{tags}{vector of tags, should be strings}
+\item{row}{parameter descibing number of rows in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
+
+\item{column}{parameter descibing number of columns in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
+
+\item{missing}{parameter descibing number of missing values in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
+
+\item{classes}{parameter descibing number of classes in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
+
+\item{owner}{show only models created by this user}
+
+\item{tags}{vector of tags, should be all strings}
 }
 \value{
 vector of models' names that have at least one common tag with those passed as the argument
 }
 \description{
-Function finds all models having at least one common tag with those passed as the argument
+Function allows you advanced search of models in vimo. If all parameters are default then returns all models' name in vimo.
 }
 \examples{
 \\code{
 library("vimo")
 
-search_model(c('example', 'easy'))
+search_model(tags = c('example', 'easy'))
+
+search_model(row='<15000;', tags = c('example', 'easy'))
+
+search_model(column='>10;<15;', owner='Example user')
+
+search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'))
 }
 
 }
