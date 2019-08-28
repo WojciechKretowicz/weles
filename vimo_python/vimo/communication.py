@@ -8,29 +8,35 @@ import re
 from io import StringIO
 
 def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
-	"""
-	Function 'upload'
+	"""Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
 
-	...::: DESCRIPTION :::...
-	Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
+	Parameters
+	----------
+	model : scikit-learn model or string
+		model object or path to the model pickle
+	model_name : string
+		name of the model that will be visible in the vimo
+	model_desc : string
+		description of the model
+	tags : list
+		list of tags
+	train_dataset : array-like or string
+		array-like or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
+	train_datset_name : string
+		name of the dataset that will be visible in the vimo
+	dataset_desc : string
+		description of the dataset
+	requirements_file : string
+		path to python style requirements file, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
+	user_name : string
+		your user name
+	password : string 
+		your password
 
-	...::: PARAMS :::...
-	model - model object or path to the model pickle
-	model_name - name of the model that will be visible in the vimo, string
-	model_desc - description of the model, string
-	tags - list of tags
-	train_dataset - matrix or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
-	train_datset_name - name of the dataset that will be visible in the vimo, string
-	dataset_desc - description of the datasets
-	requirements_file - python style requirements, can be easily obtained by running: "pip freeze > requirements.txt" at your command line
-	user_name - your user name
-	password - your password
-
-	...::: RETURN :::...
-	Returns an information if uploading the model was successful.
-
-	...::: EXAMPLES :::...
-
+	Returns
+	-------
+	string
+		Returns an information if uploading the model was successful.
 	"""
 
 	# url to post
@@ -142,19 +148,24 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 
 def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""
-	Function predict
-
-	...::: DESCRIPTION :::...
 	Function uses model in the database to make a prediction on X.
 
-	...::: PARAMS :::...
-	model_name - name of the model in the database
-	X - array-like or path to csv file (must containt '/') or hash of already uploaded dataset, must have column names if prepare_columns is set to False
-	pred_type - type of the prediction: exact/prob
-	prepare_columns - if true and if X is an object then take column names from model in the database
+	Parameters
+	----------
+	model_name : string
+		name of the model in the base that you want to use
+	X : array-like/string
+		array-like or path to csv file (must containt '/') or hash of already uploaded dataset,
+		must have column names if prepare_columns is set to False
+	pred_type : string
+		type of the prediction: exact/prob
+	prepare_columns : boolean
+		if true and if X is an object then take column names from model in the database
 
-	...::: RETURN :::...
-	Returns a pandas data frame with made predictions.
+	Returns
+	-------
+	array-like
+		Returns a pandas data frame with made predictions.
 	"""
 
 	# url
@@ -227,34 +238,38 @@ def model_info(model_name):
 
 def create_user(user_name, password, mail):
 	"""
-	Function create_user
+	Function create_userFunction creates new user in the vimo base.
 
-	...::: DESCRIPTION :::...
-	Function creates new user in the vimo base.
+	Parameters
+	----------
+	user_name : string
+		your user name, has to be unique, if such user already exists you will get such information in response
+	password : string
+		your password, passwords are hashed
+	mail : string
+		your mail
 
-	...::: PARAMS :::...
-	user_name - your user name, has to be unique, if such user already exists you will get such information in response
-	password - your password, passwords are hashed
-	mail - you mail
-
-	...::: RETURN :::...
-	Information if creating account was successful.
+	Returns
+	-------
+	string
+		Information if creating account was successful.
 	"""
 	r = requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
 	return r.text
 
 def search_model(tags):
 	"""
-	Function search_model
-
-	...::: DESCRIPTION :::...
 	Search vimo base for models with specific tags.
 
-	...::: PARAMS :::...
-	tags - list of tags
+	Params
+	------
+	list
+		list of tags, all should be strings
 
-	...::: RETURN :::...
-	Returns a list of models that have at least one common tag with that provided in parameter 'tags'
+	Returns
+	-------
+	list
+		Returns a list of models' names that have at least one common tag with that provided in parameter 'tags'
 	"""
 	r = requests.get('http://192.168.137.64/models/search', data = {'tags': tags})
 	return r.json()['models']

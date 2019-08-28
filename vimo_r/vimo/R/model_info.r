@@ -15,6 +15,9 @@
 #' library("vimo")
 #'
 #' model_info("example_model")
+#' model_info("example_model")$model_info
+#' model_info("example_model")$data_info
+#' model_info("example_model")$data_info$dataset_id
 #'
 #' @export
 model_info = function(model_name) {

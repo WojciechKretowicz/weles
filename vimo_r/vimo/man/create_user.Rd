@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_user.r
 \name{create_user}
 \alias{create_user}
-\title{Get an info about the model in **vimo**}
+\title{Create user in the vimo}
 \usage{
 create_user(user_name, password, mail)
 }
@@ -11,18 +11,20 @@ create_user(user_name, password, mail)
 
 \item{password}{your password, character}
 
-\item{mail}{your password, character}
+\item{mail}{your mail, character}
 }
 \value{
-named list containing all meta data about model
+Information if creating an account was successful.
 }
 \description{
-Thanks to this function you can create user on **vimo**.
+This function is used to create an user account. You need this to have an access to all features in vimo.
 }
 \examples{
+\\code{
 library("vimo")
 
-model_info("example_model")
+create_user("Example user", "example password", "example_mail@gmail.com")
+}
 
 }
 \references{

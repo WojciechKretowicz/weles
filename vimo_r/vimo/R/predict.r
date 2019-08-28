@@ -1,22 +1,27 @@
 #' @title Make a prediction using **vimo** model
 #'
 #' @description
-#' This tool allows you to make a prediction of model in **vimo**.
+#' This tool allows you to make a prediction with model in **vimo**.
 #'
 #' @param model_name name of the model in **vimo**
-#' @X data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data
+#' @X data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
+#' if X is an object and prepare_columns is True, columns' names will be fetched automatically
+#' @param pred_type type of prediction, 'exact' or 'prob'
+#' @param prepare_columns if X is an object then columns' names will be fetched automatically
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
+#' \code {
 #' library("vimo")
 #'
 #' predict("example_model", iris[,-5])
+#' }
 #'
 #' @export
-predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
+predict.character <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
 	# url
 	url = paste0('http://192.168.137.64/models/', model_name, '/predict/', pred_type)
 

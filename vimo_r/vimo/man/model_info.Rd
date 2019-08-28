@@ -19,6 +19,9 @@ This tool is used for getting a meta data about the model that is already upload
 library("vimo")
 
 model_info("example_model")
+model_info("example_model")$model_info
+model_info("example_model")$data_info
+model_info("example_model")$data_info$dataset_id
 
 }
 \references{

@@ -2,23 +2,25 @@
 % Please edit documentation in R/search_model.r
 \name{search_model}
 \alias{search_model}
-\title{Get an info about the model in **vimo**}
+\title{Find model that interests you the most}
 \usage{
 search_model(tags)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{tags}{vector of tags, should be strings}
 }
 \value{
-named list containing all meta data about model
+vector of models' names that have at least one common tag with those passed as the argument
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+Function finds all models having at least one common tag with those passed as the argument
 }
 \examples{
+\\code{
 library("vimo")
 
-model_info("example_model")
+search_model(c('example', 'easy'))
+}
 
 }
 \references{

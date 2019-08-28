@@ -1,22 +1,24 @@
-#' @title Get an info about the model in **vimo**
+#' @title Create user in the vimo
 #'
 #' @description
-#' Thanks to this function you can create user on **vimo**.
+#' This function is used to create an user account. You need this to have an access to all features in vimo.
 #'
 #' @param user_name your user name in **vimo**, character
 #' @param password your password, character
-#' @param mail your password, character
+#' @param mail your mail, character
 #'
-#' @return named list containing all meta data about model
+#' @return Information if creating an account was successful.
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
+#' \code{
 #' library("vimo")
 #'
-#' model_info("example_model")
+#' create_user("Example user", "example password", "example_mail@gmail.com")
+#' }
 #'
 #' @export
 create_user = function(user_name, password, mail) {

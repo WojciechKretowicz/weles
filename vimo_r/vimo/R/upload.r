@@ -1,19 +1,25 @@
 #' @title Upload model to **vimo**
 #'
 #' @description
-#' This tool is allows you to upload your *mlr* model to model governance base **vimo**.
+#' This tool allows you to upload your *mlr* model to model governance base **vimo**.
 #'
-#' @param model mlr learner, or path to the mlr model written as learner
-#' @param model_name name of the model that will be visible in **vimo**
-#' @train_dataset training dataset with named columns and target column as the last one, or path to *.csv* file (must contain **/** sign) or hash of already
+#' @param model mlr learner, or path to the mlr model written as '.RDS' file
+#' @param model_name name of the model that will be visible in the **vimo**
+#' @param model_desc description of the model
+#' @param tags vector of model's tags, should be vector of strings
+#' @param train_dataset training dataset with named columns and target column as the last one, or path to *.csv* file (must contain **/** sign) or hash of already
 #' uploaded data
-#' @train_dataset_name name of the training dataset that will be visible in the database
+#' @param train_dataset_name name of the training dataset that will be visible in the database
+#' @param dataset_desc description of the dataset
+#' @param your user name
+#' @param password your password
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
+#' \code{
 #' library("vimo")
 #' library("mlr")
 #'
@@ -21,7 +27,9 @@
 #' model = makeLearner("classif.randomForest")
 #' model = train(model, task)
 #'
-#' upload(model, "example_model", iris, "example_training_data")
+#' upload(model, "example_model", "This is an example model", c('example', 'easy'), iris, "example_training_data", 'This is an example data', 'Example user', 
+#' 'example password')
+#' }
 #'
 #' @export
 upload <- function(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {

@@ -1,20 +1,22 @@
-#' @title Get an info about the model in **vimo**
+#' @title Find model that interests you the most
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' Function finds all models having at least one common tag with those passed as the argument
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param tags vector of tags, should be strings
 #'
-#' @return named list containing all meta data about model
+#' @return vector of models' names that have at least one common tag with those passed as the argument
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
+#' \code{
 #' library("vimo")
 #'
-#' model_info("example_model")
+#' search_model(c('example', 'easy'))
+#' }
 #'
 #' @export
 search_model = function(tags) {
