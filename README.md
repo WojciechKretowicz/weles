@@ -3,7 +3,8 @@
 The Python client package for communication with model governance base **vimo**. **vimo** supports virtualization with all versions of **Python** and **R** languages from version **3.0** and package versions.
 At this moment supports all:
 * scikit-learn
-* keras, mlr
+* keras
+* mlr
 * caret
 * parsnip
 
