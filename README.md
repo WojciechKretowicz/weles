@@ -1,6 +1,15 @@
 # vimo
 
-The Python client package for communication with model governance base **vimo**. **vimo** supports virtualization with all versions of **Python** and **R** languages from version **3.0** and package versions. At this moment supports all scikit-learn models in your environment and all models added to the base. During the development **vimo** is only accessible via MINI network. However you can access it from other places via ssh, if you have account at this network.
+The Python client package for communication with model governance base **vimo**. **vimo** supports virtualization with all versions of **Python** and **R** languages from version **3.0** and package versions.
+At this moment supports all:
+* scikit-learn
+* keras, mlr
+* caret
+* parsnip
+
+models.
+
+During the development **vimo** is only accessible via MINI network. However you can access it from other places via ssh, if you have account at this network.
 
 # Installation
 
