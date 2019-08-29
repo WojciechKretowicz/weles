@@ -6,6 +6,7 @@ import pandas as pd
 import platform
 import re
 from io import StringIO
+from datetime import datetime
 
 def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
 	"""Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
@@ -38,6 +39,11 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 	string
 		Returns an information if uploading the model was successful.
 	"""
+
+	timestamp = str(datetime.now().timestamp())
+
+	if re.search('^[a-z0-9A-Z_]+$', model_name) is None:
+		return "Your model name contains non alphanumerical signs."
 
 	# url to post
 	url = 'http://192.168.137.64/models/post'
@@ -72,11 +78,11 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 		# case when model is an object
 
 		# creating temporary file
-		with open('.tmp_model.pkl', 'wb') as fd:
+		with open('.tmp_model_' + timestamp +'.pkl', 'wb') as fd:
 			pickle.dump(model, fd)
 
 		# uploading model
-		files = {'model': open('.tmp_model.pkl', 'rb')}
+		files = {'model': open('.tmp_model_' + timestamp + '.pkl', 'rb')}
 
 		# setting flag
 		del_model = True
@@ -102,10 +108,10 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 		train_dataset = pd.DataFrame(train_dataset)
 
 		# creating temporary file
-		train_dataset.to_csv('./tmp_train_data_csv', index = False)
+		train_dataset.to_csv('.tmp_train_data_' + timestamp + '.csv', index = False)
 
 		# uploading dataset
-		files['train_dataset'] = open('./tmp_train_data_csv', 'rb')
+		files['train_dataset'] = open('.tmp_train_data_' + timestamp + '.csv', 'rb')
 
 		# setting flag
 		del_train_data = True
@@ -140,9 +146,9 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 
 	# removing temporary files
 	if del_model:
-		os.remove('.tmp_model.pkl')
+		os.remove('.tmp_model_' + timestamp + '.pkl')
 	if del_train_data:
-		os.remove('./tmp_train_data_csv')
+		os.remove('.tmp_train_data_' + timestamp + '.pkl)
 
 	return r.text
 
@@ -167,6 +173,8 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	array-like
 		Returns a pandas data frame with made predictions.
 	"""
+
+	timestamp = str(datetime.now().timestamp())
 
 	# url
 	url = 'http://192.168.137.64/models/' + model_name + '/predict/' + pred_type
@@ -205,16 +213,16 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 			X.columns = c
 
 		# creating temporary file
-		X.to_csv('./tmp_data_csv-' + model_name, index = False)
+		X.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
 
 		info = {'is_hash': 0}
-		files = {'data': open('./tmp_data_csv-' + model_name, 'rb')}
+		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
 
 		# request
 		r = requests.get(url, files=files, data = info)
 
 		# removing temporary file
-		os.remove('./tmp_data_csv-' + model_name)
+		os.remove('.tmp_data_' + timestamp + '.csv')
 
 	return pd.read_csv(StringIO(r.text), header=None)
 

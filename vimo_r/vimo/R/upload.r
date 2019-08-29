@@ -33,6 +33,11 @@
 #'
 #' @export
 upload <- function(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
+
+	if(!grepl('^[a-z0-9A-Z]+$', model_name)) {
+		return("Your model's name contains non alphanumerical characters")
+	}
+
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
@@ -152,6 +157,6 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 		file.remove('./tmp_train_data_csv')
 	}
 
-	r
+	httr::content(r, 'text')
 }
 
