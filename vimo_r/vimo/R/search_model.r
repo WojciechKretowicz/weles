@@ -26,11 +26,11 @@
 #'
 #' search_model(column='>10;<15;', owner='Example user')
 #'
-#' search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'))
+#' search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'), regex='^R')
 #' }
 #'
 #' @export
-search_model = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c()) {
+search_model = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c(), regex=NA) {
 	body = as.list(tags)
 	names(body) = rep('tags', length(body))
 	body[['row']] = row
@@ -38,6 +38,7 @@ search_model = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tag
 	body[['missing']] = missing
 	body[['classes']] = classes
 	body[['owner']] = owner
+	body[['regex']] = regex
 	result = httr::content(httr::POST(url = 'http://192.168.137.64/models/search', body = body))
 	unlist(result$models)
 }

@@ -22,6 +22,8 @@
 #'
 #' @export
 predict.character <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
+
+	h = digest::digest(c(model_name, Sys.time()))
 	# url
 	url = paste0('http://192.168.137.64/models/', model_name, '/predict/', pred_type)
 
@@ -54,10 +56,10 @@ predict.character <- function(model_name, X, pred_type = 'exact', prepare_column
 			colnames(X) = columns[-length(col)]
 		}
 
-		write.table(X, paste0('./tmp_data_csv-', model_name), row.names=F, col.names=T, sep=',')
+		write.table(X, paste0('.tmp_data_', h, '.csv'), row.names=F, col.names=T, sep=',')
 
 		body[['is_hash']] =  0
-		body[['data']] = httr::upload_file(paste0('./tmp_data_csv-', model_name))
+		body[['data']] = httr::upload_file(paste0('.tmp_data_', h, '.csv'))
 
 		# removing temporary file
 		del = TRUE
@@ -66,7 +68,7 @@ predict.character <- function(model_name, X, pred_type = 'exact', prepare_column
 	r = httr::content(httr::POST(url = url, body = body), as='text')
 
 	if(del) {
-		file.remove(paste0('./tmp_data_csv-', model_name))
+		file.remove(paste0('.tmp_data_', h, '.csv'))
 	}
 	read.csv(text = r, header = F)[,1]
 }

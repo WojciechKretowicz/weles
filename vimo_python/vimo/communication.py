@@ -148,7 +148,7 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 	if del_model:
 		os.remove('.tmp_model_' + timestamp + '.pkl')
 	if del_train_data:
-		os.remove('.tmp_train_data_' + timestamp + '.pkl)
+		os.remove('.tmp_train_data_' + timestamp + '.pkl')
 
 	return r.text
 
@@ -265,7 +265,7 @@ def create_user(user_name, password, mail):
 	r = requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
 	return r.text
 
-def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None):
+def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
 	Search vimo base for models with specific tags. If all parameters are set to None, then returns all models' name in vimo.
 
@@ -291,12 +291,92 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 		owner's user name
 	tags : list
 		list of tags, all should be strings
+	regex : string
+		regex for models' names
 
 	Returns
 	-------
 	list
 		Returns a list of models' names that have at least one common tag with that provided in parameter 'tags'
 	"""
-	data = {'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags}
+	data = {'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
+
+def upload_data(data, data_name, data_desc, user_name, password):
+	"""Upload data to vimo.
+
+	Parameters
+	----------
+	data : array-like/string
+		data to upload or path to this data
+	data_name : string
+		name of the dataset that will be visible in the vimo base
+	data_desc : string
+		desciprtion of the data
+	user_name : string
+		your user name
+	password : string
+		your password
+	"""
+
+	url = 'http://192.168.137.64/datasets/post'
+
+	timestamp = str(datetime.now().timestamp())
+
+	# uploading data
+	info = {'user_name': user_name, 'password': password, 'data_name': data_name, 'data_desc': data_desc}
+	if type(X) == str:
+		# case when data is a path
+
+		files = {'data': open(data, 'rb')}
+
+		# request
+		r = requests.post(url, files=files, data=info)
+	else:
+		# case when data is an object
+
+		# conversion to pandas data frame
+		X = pd.DataFrame(X)
+
+
+		# creating temporary file
+		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
+
+		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+
+		# request
+		r = requests.post(url, files=files, data = info)
+
+		# removing temporary file
+		os.remove('.tmp_data_' + timestamp + '.csv')
+
+def audit_model(model_name, data, measure):
+
+	timestamp = str(datetime.now().timestamp())
+	del_data = False
+	# uploading data
+	if type(X) == str:
+		# case when data is a path
+
+		files = {'data': open(data, 'rb')}
+
+	else:
+		# case when data is an object
+
+		# conversion to pandas data frame
+		X = pd.DataFrame(X)
+
+
+		# creating temporary file
+		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
+
+		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+
+		del_data = True
+
+	requests.post('http://192.168.137.64/models/audit', files=files, data = {'model_name': model_name, 'measure': measure})
+
+	if del_data:
+		os.remove('.tmp_data_' + timestamp + '.csv')
+

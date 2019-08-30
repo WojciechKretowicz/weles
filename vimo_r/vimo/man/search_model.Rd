@@ -5,7 +5,7 @@
 \title{Find model that interests you the most}
 \usage{
 search_model(row = NA, column = NA, missing = NA, classes = NA,
-  owner = NA, tags = c())
+  owner = NA, tags = c(), regex = NA)
 }
 \arguments{
 \item{row}{parameter descibing number of rows in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
@@ -36,7 +36,7 @@ search_model(row='<15000;', tags = c('example', 'easy'))
 
 search_model(column='>10;<15;', owner='Example user')
 
-search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'))
+search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'), regex='^R')
 }
 
 }

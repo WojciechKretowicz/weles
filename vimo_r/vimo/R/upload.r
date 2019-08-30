@@ -34,6 +34,8 @@
 #' @export
 upload <- function(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 
+	h = digest::digest(c(model_name, model_desc, tags, train_dataset_name, dataset_desc, user_name, password))
+
 	if(!grepl('^[a-z0-9A-Z]+$', model_name)) {
 		return("Your model's name contains non alphanumerical characters")
 	}
@@ -50,7 +52,7 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 	}
 
 	requirements = data.frame(pkg_names, pkg_versions)
-	write.table(requirements, '.tmp-requirements.txt', row.names=F, col.names=F, sep=',')
+	write.table(requirements, paste0('.tmp_requirements_', h, '.txt'), row.names=F, col.names=F, sep=',')
 
 	system = Sys.info()[1]
 	system_release = Sys.info()[2]
@@ -74,10 +76,10 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 		# case when model is an object
 
 		# creating temporary file
-		saveRDS(model, '.tmp_model')
+		saveRDS(model, paste0('.tmp_model_', h, '.rds'))
 
 		# uploading model
-		body = list('model' = httr::upload_file('.tmp_model'))
+		body = list('model' = httr::upload_file(paste0('.tmp_model_', h, '.rds')))
 
 		# setting flag
 		del_model = T
@@ -97,10 +99,10 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 		# case when train_dataset is a matrix
 
 		# creating temporary file
-		write.table(train_dataset, './tmp_train_data_csv', col.names=T, row.names=F, sep=',')
+		write.table(train_dataset, paste0('.tmp_train_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
 
 		# uploading dataset
-		body[['train_dataset']] = httr::upload_file('./tmp_train_data_csv')
+		body[['train_dataset']] = httr::upload_file(paste0('.tmp_train_data_', h, '.csv'))
 		body[['train_dataset_hash']]= 0
 
 		# setting flag
@@ -121,12 +123,12 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 		
 
 	# uploading requirements file
-	body[['requirements']] = httr::upload_file('.tmp-requirements.txt')
+	body[['requirements']] = httr::upload_file(paste0('.tmp_requirements_', h, '.txt'))
 
 	# uploading sessionInfo
 	body[['is_sessionInfo']] = 1
-	saveRDS(ses, '.tmp-ses')
-	body[['sessionInfo']] = httr::upload_file('.tmp-ses')
+	saveRDS(ses, paste0('.tmp_ses_', h, '.rds'))
+	body[['sessionInfo']] = httr::upload_file(paste0('.tmp_ses_', h, '.rds'))
 
 	body[['model_name']] = model_name
 	body[['system']] = system
@@ -151,11 +153,14 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 
 	# removing temporary files
 	if(del_model) {
-		file.remove('.tmp_model')
+		file.remove(paste0('.tmp_model_', h, '.rds'))
 	}
 	if(del_train_data) {
-		file.remove('./tmp_train_data_csv')
+		file.remove(paste0('.tmp_train_data_', h, '.csv'))
 	}
+
+	file.remove(paste0('.tmp_ses_', h, '.rds'))
+	file.remove(paste0('.tmp_requirements_', h, '.txt'))
 
 	httr::content(r, 'text')
 }
