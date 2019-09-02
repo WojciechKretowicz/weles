@@ -32,7 +32,7 @@
 #' }
 #'
 #' @export
-upload <- function(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
+upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 
 	h = digest::digest(c(model_name, model_desc, tags, train_dataset_name, dataset_desc, user_name, password))
 
@@ -144,6 +144,8 @@ upload <- function(model, model_name, model_desc, tags, train_dataset, train_dat
 
 	body[['user_name']] = user_name
 	body[['password']] = password
+
+	body[['target']] = target
 
 	tags = as.list(tags)
 	names(tags) = rep('tags', length(tags))

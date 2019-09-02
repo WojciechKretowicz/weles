@@ -4,7 +4,7 @@
 \alias{upload}
 \title{Upload model to **vimo**}
 \usage{
-upload(model, model_name, model_desc, tags, train_dataset,
+upload(model, model_name, model_desc, target, tags, train_dataset,
   train_dataset_name, dataset_desc, user_name, password)
 }
 \arguments{

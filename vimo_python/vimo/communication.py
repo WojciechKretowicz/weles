@@ -8,7 +8,7 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
+def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
 	"""Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
 
 	Parameters
@@ -61,6 +61,8 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 
 	info['model_name'] = model_name
 	info['train_data_name'] = train_dataset_name
+
+	info['target'] = target
 
 
 	# init of flag if train_dataset is a hash
@@ -148,7 +150,7 @@ def upload(model, model_name, model_desc, tags, train_dataset, train_dataset_nam
 	if del_model:
 		os.remove('.tmp_model_' + timestamp + '.pkl')
 	if del_train_data:
-		os.remove('.tmp_train_data_' + timestamp + '.pkl')
+		os.remove('.tmp_train_data_' + timestamp + '.csv')
 
 	return r.text
 
@@ -352,6 +354,7 @@ def upload_data(data, data_name, data_desc, user_name, password):
 		os.remove('.tmp_data_' + timestamp + '.csv')
 
 def audit_model(model_name, data, measure):
+	"""TODO"""
 
 	timestamp = str(datetime.now().timestamp())
 	del_data = False
@@ -379,4 +382,13 @@ def audit_model(model_name, data, measure):
 
 	if del_data:
 		os.remove('.tmp_data_' + timestamp + '.csv')
+
+def head_data(dataset_id, n=5):
+	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
+	return pd.DataFrame(r.json())
+
+def get_data(dataset_id):
+	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
+	return pd.DataFrame(r.json())
+
 
