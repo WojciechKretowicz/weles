@@ -45,4 +45,6 @@ upload_data = function(data, data_name, user_name, password) {
 	if(del_data) {
 		file.remove(paste0('.tmp_data_', h, '.csv'))
 	}
+
+	r
 }
