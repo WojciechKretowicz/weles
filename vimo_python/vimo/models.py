@@ -246,27 +246,6 @@ def model_info(model_name):
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	return r.json()
 
-def create_user(user_name, password, mail):
-	"""
-	Function create_userFunction creates new user in the vimo base.
-
-	Parameters
-	----------
-	user_name : string
-		your user name, has to be unique, if such user already exists you will get such information in response
-	password : string
-		your password, passwords are hashed
-	mail : string
-		your mail
-
-	Returns
-	-------
-	string
-		Information if creating account was successful.
-	"""
-	r = requests.post('http://192.168.137.64/users/create_user', data = {'user_name': user_name, 'password': password, 'mail': mail})
-	return r.text
-
 def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
 	Search vimo base for models with specific tags. If all parameters are set to None, then returns all models' name in vimo.
@@ -305,71 +284,42 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 
-def upload_data(data, data_name, data_desc, user_name, password):
-	"""Upload data to vimo.
-
-	Parameters
-	----------
-	data : array-like/string
-		data to upload or path to this data
-	data_name : string
-		name of the dataset that will be visible in the vimo base
-	data_desc : string
-		desciprtion of the data
-	user_name : string
-		your user name
-	password : string
-		your password
-	"""
-
-	url = 'http://192.168.137.64/datasets/post'
-
-	timestamp = str(datetime.now().timestamp())
-
-	# uploading data
-	info = {'user_name': user_name, 'password': password, 'data_name': data_name, 'data_desc': data_desc}
-	if type(X) == str:
-		# case when data is a path
-
-		files = {'data': open(data, 'rb')}
-
-		# request
-		r = requests.post(url, files=files, data=info)
-	else:
-		# case when data is an object
-
-		# conversion to pandas data frame
-		X = pd.DataFrame(X)
-
-
-		# creating temporary file
-		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
-
-		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
-
-		# request
-		r = requests.post(url, files=files, data = info)
-
-		# removing temporary file
-		os.remove('.tmp_data_' + timestamp + '.csv')
-
-def audit_model(model_name, data, measure):
+def audit_model(model_name, measure, user, password data, target, data_name=None, data_desc=None):
 	"""TODO"""
+
+	info = {'model_name': model_name, 'measure': measure, 'user': user, 'password': password, 'target': target}
 
 	timestamp = str(datetime.now().timestamp())
 	del_data = False
+
+	# regexp to find out if X is a path
+	reg = re.compile("/")
+
+
 	# uploading data
-	if type(X) == str:
+	if type(X) == str and reg.search(X) is None:
+		# case when X is a hash
+		info['is_hash'] = 1
+		info['hash'] = X
+
+		r = requests.post('http://192.168.137.64/models/audit', data=info)
+	elif type(X) == str:
 		# case when data is a path
-
 		files = {'data': open(data, 'rb')}
+		info['is_hash'] = 0
+		info['data_name'] = data_name
+		info['data_desc'] = data_desc
 
+		r = requests.post('http://192.168.137.64/models/audit', files=files, data=info)
 	else:
 		# case when data is an object
 
+		info['is_hash'] = 0
+		info['data_name'] = data_name
+		info['data_desc'] = data_desc
+
 		# conversion to pandas data frame
 		X = pd.DataFrame(X)
-
 
 		# creating temporary file
 		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
@@ -378,17 +328,9 @@ def audit_model(model_name, data, measure):
 
 		del_data = True
 
-	requests.post('http://192.168.137.64/models/audit', files=files, data = {'model_name': model_name, 'measure': measure})
+		r = requests.post('http://192.168.137.64/models/audit', files=files, data=info)
 
 	if del_data:
 		os.remove('.tmp_data_' + timestamp + '.csv')
 
-def head_data(dataset_id, n=5):
-	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
-	return pd.DataFrame(r.json())
-
-def get_data(dataset_id):
-	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
-	return pd.DataFrame(r.json())
-
-
+	return r.text
