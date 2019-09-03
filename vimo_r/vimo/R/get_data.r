@@ -1,11 +1,11 @@
-#' @title Get an info about the model in **vimo**
+#' @title Get the dataset from **vimo**
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' You can use this function to download the dataset from vimo as a data frame
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param dataset_id hash of the dataset
 #'
-#' @return named list containing all meta data about model
+#' @return data frame
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -14,10 +14,7 @@
 #' @examples
 #' library("vimo")
 #'
-#' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' get_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 #'
 #' @export
 get_data = function(dataset_id) {

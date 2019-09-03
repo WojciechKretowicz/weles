@@ -23,10 +23,17 @@ def upload_data(data, data_name, data_desc, user_name, password):
 		your user name
 	password : string
 		your password
+
+	Returns
+	-------
+	string
+		information if uploading data was successful
 	"""
 
+	# url to post
 	url = 'http://192.168.137.64/datasets/post'
 
+	# timestamp for temporary files
 	timestamp = str(datetime.now().timestamp())
 
 	# uploading data
@@ -58,9 +65,37 @@ def upload_data(data, data_name, data_desc, user_name, password):
 	return r.text
 
 def head_data(dataset_id, n=5):
+	"""View the head of the dataset.
+
+	Parameters
+	----------
+	dataset_id : string
+		hash of the dataset
+	n : int
+		number of rows to show
+
+	Returns
+	-------
+	pandas.DataFrame
+		pandas DataFrame with top n rows
+	"""
+
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
 	return pd.DataFrame(r.json())
 
 def get_data(dataset_id):
+	"""Get dataset from the vimo as dataframe.
+
+	Parameters
+	----------
+	dataset_id : string
+		hash of the dataset
+
+	Returns
+	-------
+	pandas.DataFrame
+		pandas Data Frame containing the requested dataset
+	"""
+
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
 	return pd.DataFrame(r.json())

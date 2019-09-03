@@ -1,11 +1,12 @@
-#' @title Get an info about the model in **vimo**
+#' @title Get the head of the dataset in the vimo
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' This tool allows you to view the head of the dataset in the vimo.
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param dataset_id the dataset hash
+#' @param n number of rows to show
 #'
-#' @return named list containing all meta data about model
+#' @return top n rows of the dataset
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -14,12 +15,9 @@
 #' @examples
 #' library("vimo")
 #'
-#' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 #'
 #' @export
-head_data = function(dataset_id, n) {
+head_data = function(dataset_id, n=5) {
 	httr::POST(paste0('http://192.168.137.64/datasets/', dataset_id), body = list('n' = n))
 }

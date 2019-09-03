@@ -1,13 +1,18 @@
-#' @title Create user in the vimo
+#' @title Make an audit of the model in the vimo
 #'
 #' @description
-#' This function is used to create an user account. You need this to have an access to all features in vimo.
+#' You can use this function to audit in different ways models already uploaded in the vimo.
 #'
-#' @param user_name your user name in **vimo**, character
-#' @param password your password, character
-#' @param mail your mail, character
+#' @param model_name name of the model in the vimo, character
+#' @param measure name of the measure used in the audit, character
+#' @param user your user name, character
+#' @param password your password
+#' @param data data frame to make an audit on or path or hash of already uploaded dataset
+#' @param target name of the target column in the dataset
+#' @param data_name name of the dataset that will be visible in the vimo, unnecessary if data is a hash
+#' @param data_desc description of the dataset, unnecessary if data is a hash
 #'
-#' @return Information if creating an account was successful.
+#' @return result of the audit or information if somethin went wrong
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -17,7 +22,7 @@
 #' \code{
 #' library("vimo")
 #'
-#' create_user("Example user", "example password", "example_mail@gmail.com")
+#' audit_model('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
 #' }
 #'
 #' @export

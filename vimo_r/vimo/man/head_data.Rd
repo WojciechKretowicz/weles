@@ -2,26 +2,25 @@
 % Please edit documentation in R/head_data.r
 \name{head_data}
 \alias{head_data}
-\title{Get an info about the model in **vimo**}
+\title{Get the head of the dataset in the vimo}
 \usage{
-head_data(dataset_id, n)
+head_data(dataset_id, n = 5)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{dataset_id}{the dataset hash}
+
+\item{n}{number of rows to show}
 }
 \value{
-named list containing all meta data about model
+top n rows of the dataset
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+This tool allows you to view the head of the dataset in the vimo.
 }
 \examples{
 library("vimo")
 
-model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 
 }
 \references{

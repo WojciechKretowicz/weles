@@ -2,26 +2,29 @@
 % Please edit documentation in R/upload_data.r
 \name{upload_data}
 \alias{upload_data}
-\title{Get an info about the model in **vimo**}
+\title{Upload the dataset to the vimo}
 \usage{
 upload_data(data, data_name, user_name, password)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{data}{the data frame to upload or path}
+
+\item{data_name}{name of the dataset that will be visible in the vimo}
+
+\item{user_name}{your user name}
+
+\item{password}{your password}
 }
 \value{
-named list containing all meta data about model
+information if uploading the data was successful
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+This function uploads the dataset and needed metadata to the vimo.
 }
 \examples{
 library("vimo")
 
-model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+upload_data(X, 'data name', 'Example user', 'example password')
 
 }
 \references{

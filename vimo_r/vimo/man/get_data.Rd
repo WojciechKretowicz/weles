@@ -2,26 +2,23 @@
 % Please edit documentation in R/get_data.r
 \name{get_data}
 \alias{get_data}
-\title{Get an info about the model in **vimo**}
+\title{Get the dataset from **vimo**}
 \usage{
 get_data(dataset_id)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{dataset_id}{hash of the dataset}
 }
 \value{
-named list containing all meta data about model
+data frame
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+You can use this function to download the dataset from vimo as a data frame
 }
 \examples{
 library("vimo")
 
-model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+get_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 
 }
 \references{

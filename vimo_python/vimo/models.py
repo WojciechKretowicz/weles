@@ -9,7 +9,7 @@ from io import StringIO
 from datetime import datetime
 
 def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
-	"""Function uploads scikit-learn model, the training set and all needed metadata to the vimo base.
+	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the vimo base.
 
 	Parameters
 	----------
@@ -230,44 +230,43 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 
 def model_info(model_name):
 	"""
-	Function model_ino
+	Get the information about model.
 
-	...::: DESCRIPTION :::...
-	Take all metadata about the model from vimo. It will return a dict.
+	Parameters
+	----------
+	model_name : string
+		name of the model in the vimo base
 
-	...::: PARAMS :::...
-	model_name - name of the model in the vimo base
-
-	...::: RETURN :::...
-	Dict with fields:
-		model_info
-		data_info
+	Returns
+	-------
+	dict
+		dictionary with fields: model_info and data_info containing all metadata about the model
 	"""
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	return r.json()
 
 def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
-	Search vimo base for models with specific tags. If all parameters are set to None, then returns all models' name in vimo.
+	Search vimo base for models with specific restrictions. If all parameters are set to None, then returns all models' name in vimo.
 
 	Params
 	------
 	row : string
 		string describing how many rows should have training dataset
 		examples:
-			row = '<101;'; row = '>120;'; row = '>100;<200;'
+			row = '<101;', row = '>120;', row = '>100;<200;', row = '=2222;'
 	column : string
 		string describing how many columns should have training dataset
 		examples:
-			column = '<101;'; column = '>120;'; column = '>100;<200;'
+			column = '<101;', column = '>120;', column = '>100;<200;', column = '=22;'
 	missing : string
 		string descibing how many missing values should have training dataset
 		examples:
-			missing = '=0;'; missing = '>120;'; missing = '<10001;'; missing = '>100;<200;'
+			missing = '=0;', missing = '>120;', missing = '<10001;', missing = '>100;<200;'
 	classes : string
 		string descibing how many classes should have training dataset
 		examples:
-			classes = '=2;'; classes = '<3;'; classes = '>2;'; classes = '>2;<11;'
+			classes = '=2;', classes = '<3;', classes = '>2;', classes = '>2;<11;'
 	owner : string
 		owner's user name
 	tags : list
@@ -278,14 +277,40 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 	Returns
 	-------
 	list
-		Returns a list of models' names that have at least one common tag with that provided in parameter 'tags'
+		Returns a list of models' names that satisfies given restrictions
 	"""
+
 	data = {'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 
 def audit_model(model_name, measure, user, password, data, target, data_name=None, data_desc=None):
-	"""TODO"""
+	"""Audit the model
+
+	Parameters
+	----------
+	model_name : string
+		name of the model in the vimo base to make an audit of
+	measure : string
+		name of the measure used on model, must be one of supported
+	user : string
+		your user name
+	password : string
+		your password
+	data : array-like/string
+		data frame to make an audit on or hash of already uploaded data in the vimo or path to the dataset
+	target : string
+		name of the column in the dataset that should be used as the target
+	data_name : string
+		optional, name of the dataset that will be visible in the vimo, unnecessary if data is a hash
+	data_desc : string
+		optional, description of the dataset, unnecessary if data is a hash
+
+	Returns
+	-------
+	string/float
+		return the result of the audit or information if something went wrong
+	"""
 
 	info = {'model_name': model_name, 'measure': measure, 'user': user, 'password': password, 'target': target}
 

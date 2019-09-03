@@ -1,11 +1,14 @@
-#' @title Get an info about the model in **vimo**
+#' @title Upload the dataset to the vimo
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' This function uploads the dataset and needed metadata to the vimo.
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param data the data frame to upload or path
+#' @param data_name name of the dataset that will be visible in the vimo
+#' @param user_name your user name
+#' @param password your password
 #'
-#' @return named list containing all meta data about model
+#' @return information if uploading the data was successful
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -14,10 +17,7 @@
 #' @examples
 #' library("vimo")
 #'
-#' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' upload_data(X, 'data name', 'Example user', 'example password')
 #'
 #' @export
 upload_data = function(data, data_name, user_name, password) {

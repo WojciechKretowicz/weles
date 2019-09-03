@@ -2,29 +2,39 @@
 % Please edit documentation in R/audit_model.r
 \name{audit_model}
 \alias{audit_model}
-\title{Create user in the vimo}
+\title{Make an audit of the model in the vimo}
 \usage{
 audit_model(model_name, measure, user, password, data, target,
   data_name = NA, data_desc = NA)
 }
 \arguments{
-\item{password}{your password, character}
+\item{model_name}{name of the model in the vimo, character}
 
-\item{user_name}{your user name in **vimo**, character}
+\item{measure}{name of the measure used in the audit, character}
 
-\item{mail}{your mail, character}
+\item{user}{your user name, character}
+
+\item{password}{your password}
+
+\item{data}{data frame to make an audit on or path or hash of already uploaded dataset}
+
+\item{target}{name of the target column in the dataset}
+
+\item{data_name}{name of the dataset that will be visible in the vimo, unnecessary if data is a hash}
+
+\item{data_desc}{description of the dataset, unnecessary if data is a hash}
 }
 \value{
-Information if creating an account was successful.
+result of the audit or information if somethin went wrong
 }
 \description{
-This function is used to create an user account. You need this to have an access to all features in vimo.
+You can use this function to audit in different ways models already uploaded in the vimo.
 }
 \examples{
 \\code{
 library("vimo")
 
-create_user("Example user", "example password", "example_mail@gmail.com")
+audit_model('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
 }
 
 }
