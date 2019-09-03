@@ -31,7 +31,7 @@ def upload_data(data, data_name, data_desc, user_name, password):
 
 	# uploading data
 	info = {'user_name': user_name, 'password': password, 'data_name': data_name, 'data_desc': data_desc}
-	if type(X) == str:
+	if type(data) == str:
 		# case when data is a path
 
 		files = {'data': open(data, 'rb')}
@@ -42,8 +42,7 @@ def upload_data(data, data_name, data_desc, user_name, password):
 		# case when data is an object
 
 		# conversion to pandas data frame
-		X = pd.DataFrame(X)
-
+		data = pd.DataFrame(data)
 
 		# creating temporary file
 		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
@@ -55,6 +54,8 @@ def upload_data(data, data_name, data_desc, user_name, password):
 
 		# removing temporary file
 		os.remove('.tmp_data_' + timestamp + '.csv')
+
+	return r.text
 
 def head_data(dataset_id, n=5):
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})

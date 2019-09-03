@@ -284,7 +284,7 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 
-def audit_model(model_name, measure, user, password data, target, data_name=None, data_desc=None):
+def audit_model(model_name, measure, user, password, data, target, data_name=None, data_desc=None):
 	"""TODO"""
 
 	info = {'model_name': model_name, 'measure': measure, 'user': user, 'password': password, 'target': target}
@@ -292,18 +292,18 @@ def audit_model(model_name, measure, user, password data, target, data_name=None
 	timestamp = str(datetime.now().timestamp())
 	del_data = False
 
-	# regexp to find out if X is a path
+	# regexp to find out if data is a path
 	reg = re.compile("/")
 
 
 	# uploading data
-	if type(X) == str and reg.search(X) is None:
-		# case when X is a hash
+	if type(data) == str and reg.search(data) is None:
+		# case when data is a hash
 		info['is_hash'] = 1
-		info['hash'] = X
+		info['hash'] = data
 
 		r = requests.post('http://192.168.137.64/models/audit', data=info)
-	elif type(X) == str:
+	elif type(data) == str:
 		# case when data is a path
 		files = {'data': open(data, 'rb')}
 		info['is_hash'] = 0
@@ -319,7 +319,7 @@ def audit_model(model_name, measure, user, password data, target, data_name=None
 		info['data_desc'] = data_desc
 
 		# conversion to pandas data frame
-		X = pd.DataFrame(X)
+		data = pd.DataFrame(data)
 
 		# creating temporary file
 		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
