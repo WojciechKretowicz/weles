@@ -359,3 +359,20 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		os.remove('.tmp_data_' + timestamp + '.csv')
 
 	return r.text
+
+def requirements(model):
+	"""Get the list of package requirements
+
+	Parameters
+	----------
+	model : string
+		name of the model
+
+	Returns
+	-------
+	dict
+		listed requirements
+	"""
+
+	r = requests.get('http://192.168.137.64/models/' + model + '/requirements')
+	return r.json()
