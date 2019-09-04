@@ -4,10 +4,15 @@
 \alias{model_search}
 \title{Find model that interests you the most}
 \usage{
-model_search(row = NA, column = NA, missing = NA, classes = NA,
-  owner = NA, tags = c(), regex = NA)
+model_search(language = NA, language_version = NA, row = NA,
+  column = NA, missing = NA, classes = NA, owner = NA,
+  tags = c(), regex = NA)
 }
 \arguments{
+\item{language}{search only among models written in this language}
+
+\item{language_version}{what language version should be model written, '<n;' '>n;' '=n;' '>a;<b;'}
+
 \item{row}{parameter descibing number of rows in training dataset, '<n;' '>n;' '=n;' '>a;<b'}
 
 \item{column}{parameter descibing number of columns in training dataset, '<n;' '>n;' '=n;' '>a;<b'}

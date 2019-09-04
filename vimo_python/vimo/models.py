@@ -240,17 +240,27 @@ def info(model_name):
 	Returns
 	-------
 	dict
-		dictionary with fields: model_info and data_info containing all metadata about the model
+		dictionary with fields: model, data, columns and audits containing all metadata about the model
 	"""
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
-	return r.json()
+	r = r.json()
+	r['audits'] = pd.DataFrame(r['audits'])
+	r['columns'] = pd.DataFrame(r['columns'])
 
-def search(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
+	return r
+
+def search(language=None, language_version=None, row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
 	Search vimo base for models with specific restrictions. If all parameters are set to None, then returns all models' name in vimo.
 
-	Params
+	Parameters
 	------
+	language : string
+		search only for models written in given language
+	language_version : string
+		string describing what version of language are in you interest
+		examples:
+			language_version = '>3.5.0;', language_version = '=3.6.0;', lanugage_version = '>3.3.3;<3.6.6;'
 	row : string
 		string describing how many rows should have training dataset
 		examples:
@@ -280,7 +290,7 @@ def search(row=None, column=None, missing=None, classes=None, owner=None, tags=N
 		Returns a list of models' names that satisfies given restrictions
 	"""
 
-	data = {'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}
+	data = {'language': language, 'language_version': language_version, 'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 

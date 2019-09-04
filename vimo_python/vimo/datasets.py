@@ -115,4 +115,7 @@ def info(dataset_id):
 	"""
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
-	return r.json()
+	r = r.json()
+	r['columns'] = pd.DataFrame(r['columns'])
+
+	return r

@@ -21,5 +21,25 @@
 #'
 #' @export
 model_info = function(model_name) {
-	httr::content(httr::GET(url = paste0('http://192.168.137.64/models/', model_name, '/info')))
+	content = httr::content(httr::GET(url = paste0('http://192.168.137.64/models/', model_name, '/info')))
+
+	audits = content$audits
+
+	auds = list()
+	for(name in names(audits)) {
+		v = c()
+		v[as.numeric(names(unlist(audits[[name]])))+1] = unlist(audits[[name]])
+		auds[[name]] = v
+	}
+
+	columns = content$columns
+
+	cols = list()
+	for(name in names(columns)) {
+		v = c()
+		v[as.numeric(names(unlist(columns[[name]])))+1] = unlist(columns[[name]])
+		cols[[name]] = v
+	}
+	
+	list(model = content$model, data = content$data, audits = data.frame(auds), columns = data.frame(cols))
 }

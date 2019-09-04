@@ -21,5 +21,17 @@
 #'
 #' @export
 data_info = function(dataset_id) {
-	httr::content(httr::GET(url = paste0('http://192.168.137.64/datasets/', dataset_id, '/info')))
+	content = httr::content(httr::GET(url = paste0('http://192.168.137.64/datasets/', dataset_id, '/info')))
+
+	columns = content$columns
+	content[['columns']] = NULL
+
+	cols = list()
+	for(name in names(columns)) {
+		v = c()
+		v[as.numeric(names(unlist(columns[[name]])))+1] = unlist(columns[[name]])
+		cols[[name]] = v
+	}
+
+	list(data = content, columns = data.frame(cols))
 }

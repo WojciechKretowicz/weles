@@ -3,6 +3,8 @@
 #' @description
 #' Function allows you advanced search of models in vimo. If all parameters are default then returns all models' name in vimo.
 #'
+#' @param language search only among models written in this language
+#' @param language_version what language version should be model written, '<n;' '>n;' '=n;' '>a;<b;'
 #' @param row parameter descibing number of rows in training dataset, '<n;' '>n;' '=n;' '>a;<b'
 #' @param column parameter descibing number of columns in training dataset, '<n;' '>n;' '=n;' '>a;<b'
 #' @param missing parameter descibing number of missing values in training dataset, '<n;' '>n;' '=n;' '>a;<b'
@@ -30,9 +32,11 @@
 #' }
 #'
 #' @export
-model_search = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c(), regex=NA) {
+model_search = function(language=NA, language_version=NA, row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c(), regex=NA) {
 	body = as.list(tags)
 	names(body) = rep('tags', length(body))
+	body[['language']] = language
+	body[['language_version']] = language_version
 	body[['row']] = row
 	body[['column']] = column
 	body[['missing']] = missing
