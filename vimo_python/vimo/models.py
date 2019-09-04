@@ -13,7 +13,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 
 	Parameters
 	----------
-	model : scikit-learn model or string
+	model : scikit-learn or keras model or string
 		model object or path to the model pickle
 	model_name : string
 		name of the model that will be visible in the vimo
@@ -23,7 +23,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		list of tags
 	train_dataset : array-like or string
 		array-like or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
-	train_datset_name : string
+	train_dataset_name : string
 		name of the dataset that will be visible in the vimo
 	dataset_desc : string
 		description of the dataset
@@ -39,6 +39,27 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	string
 		Returns an information if uploading the model was successful.
 	"""
+
+	if not isinstance(model_name, str):
+		raise ValueError("model_name must be a string")
+	if not isinstance(model_desc, str):
+		raise ValueError("model_desc must be a string")
+	if not isinstance(target, str):
+		raise ValueError("target must be a string")
+	if not isinstance(tags, list):
+		raise ValueError("tags must be a list")
+	if not isinstance(train_dataset, (str, pd.DataFrame)):
+		raise ValueError("train_dataset must be a string or pandas data frame")
+	if not isinstance(train_dataset_name, str):
+		raise ValueError("train_dataset_name must be a string")
+	if not isinstance(dataset_desc, str):
+		raise ValueError("dataset_desc must be a string")
+	if not isinstance(requirements_file, str):
+		raise ValueError("requirements_file must be a string")
+	if not isinstance(user_name, str):
+		raise ValueError("user_name must be a string")
+	if not isinstance(password, str):
+		raise ValueError("password must be a string")
 
 	timestamp = str(datetime.now().timestamp())
 
@@ -176,6 +197,15 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 		Returns a pandas data frame with made predictions.
 	"""
 
+	if not isinstance(model_name, str):
+		raise ValueError("model_name must be a string")
+	if not isinstance(X, (str, pd.DataFrame)):
+		raise ValueError("X must be a string or pandas.DataFrame")
+	if not isinstance(pred_type, str):
+		raise ValueError("pred_type must be a string")
+	if not isinstance(prepare_columns, bool):
+		raise ValueError("prepare_columns must be a bool")
+
 	timestamp = str(datetime.now().timestamp())
 
 	# url
@@ -242,6 +272,10 @@ def info(model_name):
 	dict
 		dictionary with fields: model, data, columns and audits containing all metadata about the model
 	"""
+
+	if not isinstance(model_name, str):
+		raise ValueError("model_name must be a string")
+
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	r = r.json()
 	r['audits'] = pd.DataFrame(r['audits'])
@@ -290,6 +324,25 @@ def search(language=None, language_version=None, row=None, column=None, missing=
 		Returns a list of models' names that satisfies given restrictions
 	"""
 
+	if not isinstance(language, str):
+		raise ValueError("language must be a string")
+	if not isinstance(language_version, str):
+		raise ValueError("language_version must be a string")
+	if not isinstance(row, str):
+		raise ValueError("row must be a string")
+	if not isinstance(column, str):
+		raise ValueError("column must be a string")
+	if not isinstance(missing, str):
+		raise ValueError("missing must be a string")
+	if not isinstance(classes, str):
+		raise ValueError("classes must be a string")
+	if not isinstance(owner, str):
+		raise ValueError("owner must be a string")
+	if not isinstance(tags, list):
+		raise ValueError("tags must be a list")
+	if not isinstance(regex, str):
+		raise ValueError("regex must be a string")
+
 	data = {'language': language, 'language_version': language_version, 'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
@@ -321,6 +374,23 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 	string/float
 		return the result of the audit or information if something went wrong
 	"""
+
+	if not isinstance(model_name, str):
+		raise ValueError("model_name must be a string")
+	if not isinstance(measure, str):
+		raise ValueError("measure must be a string")
+	if not isinstance(user, str):
+		raise ValueError("user must be a string")
+	if not isinstance(password, str):
+		raise ValueError("password must be a string")
+	if not isinstance(data, (pd.DataFrame, str)):
+		raise ValueError("data must be a string or pd.DataFrame")
+	if not isinstance(target, str):
+		raise ValueError("target must be a string")
+	if data_name is not None and not isinstance(data_name, str):
+		raise ValueError("data_name must be a str")
+	if data_desc is not None and not isinstance(data_desc, str):
+		raise ValueError("data_name must be a str")
 
 	info = {'model_name': model_name, 'measure': measure, 'user': user, 'password': password, 'target': target}
 
@@ -383,6 +453,9 @@ def requirements(model):
 	dict
 		listed requirements
 	"""
+
+	if not isinstance(model, str):
+		raise ValueError("model must be a string")
 
 	r = requests.get('http://192.168.137.64/models/' + model + '/requirements')
 	return r.json()

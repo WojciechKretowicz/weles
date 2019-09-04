@@ -30,6 +30,17 @@ def upload(data, data_name, data_desc, user_name, password):
 		information if uploading data was successful
 	"""
 
+	if not isinstance(data, (str, pd.DataFrame)):
+		raise ValueError("data must be a string or a data frame")
+	if not isinstance(data_name, str):
+		raise ValueError("data_name must be a string")
+	if not isinstance(data_desc, str):
+		raise ValueError("data_desc must be a string")
+	if not isinstance(user_name, str):
+		raise ValueError("user_name must be a string")
+	if not isinstance(password):
+		raise ValueError("password must be a string")
+
 	# url to post
 	url = 'http://192.168.137.64/datasets/post'
 
@@ -80,6 +91,13 @@ def head(dataset_id, n=5):
 		pandas DataFrame with top n rows
 	"""
 
+	if not isinstance(dataset_id, str):
+		raise ValueError("dataset_id must be a string")
+	if not len(dataset_id) == 64:
+		raise ValueError("dataset_id must be 64 character long")
+	if not isinstance(n, int):
+		raise ValueError("n must be an integer")
+
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
 	return pd.DataFrame(r.json())
 
@@ -97,7 +115,13 @@ def get(dataset_id):
 		pandas Data Frame containing the requested dataset
 	"""
 
+	if not isinstance(dataset_id, str):
+		raise ValueError("dataset_id must be a string")
+	if not len(dataset_id) == 64:
+		raise ValueError("dataset_id must be 64 character long")
+
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
+
 	return pd.DataFrame(r.json())
 
 def info(dataset_id):
@@ -113,6 +137,11 @@ def info(dataset_id):
 	dict
 		dictionary contating all metadata about the dataset
 	"""
+
+	if not isinstance(dataset_id, str):
+		raise ValueError("dataset_id must be a string")
+	if not len(dataset_id) == 64:
+		raise ValueError("dataset_id must be 64 character long")
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
 	r = r.json()
