@@ -19,5 +19,12 @@
 #'
 #' @export
 head_data = function(dataset_id, n=5) {
-	httr::POST(paste0('http://192.168.137.64/datasets/', dataset_id), body = list('n' = n))
+	df = httr::content(httr::POST(paste0('http://192.168.137.64/datasets/', dataset_id, '/head'), body = list('n' = n)), 'parsed')
+	cols = list()
+	for(name in names(df)) {
+		v = c()
+		v[as.numeric(names(unlist(df[[name]])))+1] = unlist(df[[name]])
+		cols[[name]] = v
+	}
+	data.frame(cols)
 }

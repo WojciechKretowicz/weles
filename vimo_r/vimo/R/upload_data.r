@@ -5,6 +5,7 @@
 #'
 #' @param data the data frame to upload or path
 #' @param data_name name of the dataset that will be visible in the vimo
+#' @param data_desc description of the dataset
 #' @param user_name your user name
 #' @param password your password
 #'
@@ -20,19 +21,19 @@
 #' upload_data(X, 'data name', 'Example user', 'example password')
 #'
 #' @export
-upload_data = function(data, data_name, user_name, password) {
-	body = list(data_name = data_name, user_name = user_name, password = password)
+upload_data = function(data, data_name, data_desc, user_name, password) {
+	body = list(data_name = data_name, data_desc = data_desc, user_name = user_name, password = password)
 	h = digest::digest(c(data_name, user_name, password, Sys.time()))
 	del_data = F
-	if(class(train_dataset) == "character") {
+	if(class(data) == "character") {
 		# case when data is a path to dataset
 
 		body[['data']] <- httr::upload_file(data)
 	} else {
-		# case when train_dataset is a matrix
+		# case when dataset is a matrix
 
 		# creating temporary file
-		write.table(train_dataset, paste0('.tmp_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
+		write.table(data, paste0('.tmp_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
 
 		# uploading dataset
 		body[['data']] = httr::upload_file(paste0('.tmp_data_', h, '.csv'))
@@ -40,7 +41,7 @@ upload_data = function(data, data_name, user_name, password) {
 		# setting flag
 		del_data = T
 	}
-	r = httr::content(httr::POST(url = 'http://192.168.137.64/datasets/post'), 'text')
+	r = httr::content(httr::POST(url = 'http://192.168.137.64/datasets/post', body=body), 'text')
 
 	if(del_data) {
 		file.remove(paste0('.tmp_data_', h, '.csv'))

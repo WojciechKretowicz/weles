@@ -4,12 +4,14 @@
 \alias{upload_data}
 \title{Upload the dataset to the vimo}
 \usage{
-upload_data(data, data_name, user_name, password)
+upload_data(data, data_name, data_desc, user_name, password)
 }
 \arguments{
 \item{data}{the data frame to upload or path}
 
 \item{data_name}{name of the dataset that will be visible in the vimo}
+
+\item{data_desc}{description of the dataset}
 
 \item{user_name}{your user name}
 

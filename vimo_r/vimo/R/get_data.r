@@ -18,5 +18,12 @@
 #'
 #' @export
 get_data = function(dataset_id) {
-	httr::GET(paste0('http://192.168.137.64/datasets/', dataset_id))
+	df = httr::content(httr::GET(paste0('http://192.168.137.64/datasets/', dataset_id)), 'parsed')
+	cols = list()
+	for(name in names(df)) {
+		v = c()
+		v[as.numeric(names(unlist(df[[name]])))+1] = unlist(df[[name]])
+		cols[[name]] = v
+	}
+	data.frame(cols)
 }
