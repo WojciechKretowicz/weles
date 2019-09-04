@@ -26,7 +26,7 @@
 #' }
 #'
 #' @export
-audit_model = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
+model_audit = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
 
 	info = list('model_name'= model_name, 'measure'= measure, 'user'= user, 'password'= password, 'target'= target)
 

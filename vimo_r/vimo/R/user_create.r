@@ -21,7 +21,7 @@
 #' }
 #'
 #' @export
-create_user = function(user_name, password, mail) {
+user_create = function(user_name, password, mail) {
 	body = list('user_name' = user_name, 'password' = password, 'mail' = mail)
 	httr::content(httr::POST('http://192.168.137.64/users/create_user', body=body), 'text')
 }

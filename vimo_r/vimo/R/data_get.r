@@ -17,7 +17,7 @@
 #' get_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 #'
 #' @export
-get_data = function(dataset_id) {
+data_get = function(dataset_id) {
 	df = httr::content(httr::GET(paste0('http://192.168.137.64/datasets/', dataset_id)), 'parsed')
 	cols = list()
 	for(name in names(df)) {

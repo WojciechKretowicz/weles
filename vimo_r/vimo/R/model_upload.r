@@ -32,7 +32,7 @@
 #' }
 #'
 #' @export
-upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
+model_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 
 	h = digest::digest(c(model_name, model_desc, tags, train_dataset_name, dataset_desc, user_name, password))
 

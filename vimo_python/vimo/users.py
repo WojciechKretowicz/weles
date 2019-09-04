@@ -8,7 +8,7 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def create_user(user_name, password, mail):
+def create(user_name, password, mail):
 	"""
 	Function create_userFunction creates new user in the vimo base.
 

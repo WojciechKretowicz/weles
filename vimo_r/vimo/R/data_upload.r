@@ -21,7 +21,7 @@
 #' upload_data(X, 'data name', 'Example user', 'example password')
 #'
 #' @export
-upload_data = function(data, data_name, data_desc, user_name, password) {
+data_upload = function(data, data_name, data_desc, user_name, password) {
 	body = list(data_name = data_name, data_desc = data_desc, user_name = user_name, password = password)
 	h = digest::digest(c(data_name, user_name, password, Sys.time()))
 	del_data = F

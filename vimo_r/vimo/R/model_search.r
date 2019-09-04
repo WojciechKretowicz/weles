@@ -30,7 +30,7 @@
 #' }
 #'
 #' @export
-search_model = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c(), regex=NA) {
+model_search = function(row=NA, column=NA, missing=NA, classes=NA, owner=NA, tags=c(), regex=NA) {
 	body = as.list(tags)
 	names(body) = rep('tags', length(body))
 	body[['row']] = row

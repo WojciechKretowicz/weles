@@ -8,7 +8,7 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def upload_data(data, data_name, data_desc, user_name, password):
+def upload(data, data_name, data_desc, user_name, password):
 	"""Upload data to vimo.
 
 	Parameters
@@ -64,7 +64,7 @@ def upload_data(data, data_name, data_desc, user_name, password):
 
 	return r.text
 
-def head_data(dataset_id, n=5):
+def head(dataset_id, n=5):
 	"""View the head of the dataset.
 
 	Parameters
@@ -83,7 +83,7 @@ def head_data(dataset_id, n=5):
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
 	return pd.DataFrame(r.json())
 
-def get_data(dataset_id):
+def get(dataset_id):
 	"""Get dataset from the vimo as dataframe.
 
 	Parameters
@@ -100,7 +100,7 @@ def get_data(dataset_id):
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
 	return pd.DataFrame(r.json())
 
-def data_info(dataset_id):
+def info(dataset_id):
 	"""Get all metadata about dataset
 
 	Parameters
@@ -114,5 +114,5 @@ def data_info(dataset_id):
 		dictionary contating all metadata about the dataset
 	"""
 
-	r = request.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
+	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
 	return r.json()

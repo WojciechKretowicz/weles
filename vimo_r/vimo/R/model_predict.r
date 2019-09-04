@@ -21,7 +21,7 @@
 #' }
 #'
 #' @export
-predict.character <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
+model_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
 
 	h = digest::digest(c(model_name, Sys.time()))
 	# url

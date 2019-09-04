@@ -228,7 +228,7 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 
 	return pd.read_csv(StringIO(r.text), header=None)
 
-def model_info(model_name):
+def info(model_name):
 	"""
 	Get the information about model.
 
@@ -245,7 +245,7 @@ def model_info(model_name):
 	r = requests.get('http://192.168.137.64/models/' + model_name + '/info')
 	return r.json()
 
-def search_model(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
+def search(row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
 	Search vimo base for models with specific restrictions. If all parameters are set to None, then returns all models' name in vimo.
 
@@ -284,7 +284,7 @@ def search_model(row=None, column=None, missing=None, classes=None, owner=None, 
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 
-def audit_model(model_name, measure, user, password, data, target, data_name=None, data_desc=None):
+def audit(model_name, measure, user, password, data, target, data_name=None, data_desc=None):
 	"""Audit the model
 
 	Parameters

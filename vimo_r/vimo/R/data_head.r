@@ -18,7 +18,7 @@
 #' head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 #'
 #' @export
-head_data = function(dataset_id, n=5) {
+data_head = function(dataset_id, n=5) {
 	df = httr::content(httr::POST(paste0('http://192.168.137.64/datasets/', dataset_id, '/head'), body = list('n' = n)), 'parsed')
 	cols = list()
 	for(name in names(df)) {
