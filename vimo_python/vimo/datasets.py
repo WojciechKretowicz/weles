@@ -99,3 +99,20 @@ def get_data(dataset_id):
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
 	return pd.DataFrame(r.json())
+
+def data_info(dataset_id):
+	"""Get all metadata about dataset
+
+	Parameters
+	----------
+	dataset_id : string
+		hash of the dataset
+
+	Returns
+	-------
+	dict
+		dictionary contating all metadata about the dataset
+	"""
+
+	r = request.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
+	return r.json()
