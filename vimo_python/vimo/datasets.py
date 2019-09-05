@@ -49,6 +49,7 @@ def upload(data, data_name, data_desc, user_name, password):
 
 	# uploading data
 	info = {'user_name': user_name, 'password': password, 'data_name': data_name, 'data_desc': data_desc}
+
 	if type(data) == str:
 		# case when data is a path
 
