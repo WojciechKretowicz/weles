@@ -33,15 +33,15 @@ devtools::install_github("WojciechKretowicz/vimo/vimo_r/vimo")
 To be able to upload your model you need to have an account on **vimo**. So here is what you need to do:
 
 ```
-from vimo import communication as comm
+from vimo import users
 
-comm.create_user('Example user', 'example password', 'example_mail@gmail.com')
+users.create('Example user', 'example password', 'example_mail@gmail.com')
 ```
 
 You will receive information if your account was created correctly.
 
 ## Uploading model
-First you need to have a trained scikit-learn model.
+First you need to have a trained scikit-learn or keras model. Let's make a scikit random forest.
 
 ### Example
 ```
@@ -53,7 +53,7 @@ model = RandomForestClassifier(n_estimators = 777)
 model.fit(data.data, data.target)
 ```
 
-To upload the model to the base you , to import client package and pass classifier, its name that will be visible in the **vimo**, its description, list of tags, training dataset with target column as last one with column names, its name, its description, requirements file, your user name and password.
+To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, its description, list of tags, training dataset with target column and with the column names, its name, its description, requirements file, your user name and password.
 
 So first let's prepare our data.
 
@@ -63,6 +63,7 @@ import pandas as pd
 train_data_to_upload = pd.DataFrame(data.data, colums=data.feature_names)
 train_data_to_upload['target'] = data.target
 ```
+
 Due to our respect for your privacy we do not investigate your environment. To allow us to make a virtualization please run in command line:
 
 ```
@@ -74,25 +75,25 @@ This will make a *Python* style requirements file.
 Now we are ready to push our model to the base. Its name has to be unique in the base. Dataset name either.
 
 ```
-from vimo import communication as comm
+from vimo import models
 
-comm.upload(model, 'example_model', 'This is an example model.', ['example', 'easy'], train_data_to_upload, 'example_data', 'This is an example dataset', 'requirements.txt', 'Example user', 'example password')
+models.upload(model, 'example_model', 'This is an example model.', ['example', 'easy'], train_data_to_upload, 'example_data', 'This is an example dataset', 'requirements.txt', 'Example user', 'example password')
 ```
 
-In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your Python sesion will be suspended. Multithreading is being under development.
+In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your Python sesion will be suspended. You will get the message if the uploading was successful.
 
 ### Summary
 
-You can also pass your model as the path (must contain **/** sign to *Python* pickle. Training data parameter can be a path to *.csv* file (must contain **/** sign) or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data.
+You can also pass your model as the path (must contain **/** sign) to *Python* pickle. Training data parameter can be a path to *.csv* file (must contain **/** sign) or *hash* of already uploaded dataset in the **vimo**.
 
 ## Reading an info about model
 
 If you want to read an info about the model already uploaded in **vimo** you can run:
 
 ```
-from vimo import communication as comm
+from vimo import models
 
-comm.model_info("example_model")
+models.info("example_model")
 ```
 
 *"example_model"* is a name of **vimo** model.
@@ -104,9 +105,9 @@ Returned value is a *Python* dictionary containing all information about the mod
 If you want to make a prediction, type:
 
 ```
-from vimo import communication as comm
+from vimo import models
 
-comm.predict("example_model", data)
+models.predict("example_model", data)
 ```
 
 *"example_model"* is the name of **vimo** model, *data* is the data frame with named columns without target column, or path to *.csv* (must contain **/** sign) file or *hash* of already uploaded data.
@@ -114,20 +115,20 @@ comm.predict("example_model", data)
 Be aware that some models may require from you exactly the same column names in passed data. If you are passing data as an object then by default columns are fetched from original dataset. If you do not want this behaviour set *prepare_data* to *False*. You may easily manually obtain columns with:
 
 ```
-columns = comm.model_info("example_model")['data_info']['columns']
+columns = models.info("example_model")['columns']
 ```
 
 ## Searching model
 
-You can also search for model in **vimo** with tags. Just type:
+You can also search models in **vimo** satisfying some restrictions.
 
 ```
-from vimo import communication as comm
+from vimo import models
 
-comm.search_model(row = '>1000;<10000;', column='=12;', user='Example user', tags = ['example', 'easy'])
+models.search(row = '>1000;<10000;', column='=12;', user='Example user', tags = ['example', 'easy'])
 ```
 
-You will get all models having at least one of these tags.
+You will get list of all models satisfying your restrictions.
 
 # Usage in R
 
@@ -137,13 +138,13 @@ To upload your model you need to create your account.
 ```
 library(vimo)
 
-create_user('Example user', 'example password', 'example_mail@gmail.com')
+user_create('Example user', 'example password', 'example_mail@gmail.com')
 ```
 
 In response you will get information if your account was created succesfully.
 
 ## Uploading model
-First you need to have a trained mlr model.
+First you need to have a trained mlr, caret or parsnip model. Let's make an mlr random forest.
 
 ### Example
 ```
@@ -154,19 +155,21 @@ model = makeLearner("clasif.randomForest")
 model = train(model, task)
 ```
 
-To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, its description, tags, training dataset with target column as last one with column names, its name, its description, your user name and password. Names should be unique.
+To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **vimo**, its description, tags, training dataset with target column and column names, its name, its description, your user name and password. Names should be unique.
 
 ```
 library('vimo')
 
-upload(model, 'example_model', 'This is an example model.', c('example', 'easy'), iris, 'example_data', 'This is an example data', 'Example user', 'example_password')
+model_upload(model, 'example_model', 'This is an example model.', c('example', 'easy'), iris, 'example_data', 'This is an example data', 'Example user', 'example_password')
 ```
 
-In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your R sesion will be suspended. Multithreading is being under development.
+In this moment *model* is being uploaded to the **vimo**. If requested environment had not been already created in the **vimo**, it will be created. During this time your R sesion will be suspended.
 
 ### Summary
 
-You can also pass your model as the path (must contain **/** sign to *R* *.rds* file. Training data parameter can be a path to *.csv* file (must constain **/** sign) or *hash* of already uploaded dataset in the **vimo**. It is recommended to upload only numerical data. Please, have loaded in your namespace only packages that are required to make a model.
+You can also pass your model as the path (must contain **/** sign) to *.rds* file. Training data parameter can be a path to *.csv* file (must constain **/** sign) or *hash* of already uploaded dataset in the **vimo**. 
+
+**Please, have loaded in your namespace only packages that are required to make a model, because creating an environment will take a while**
 
 ## Reading an info about model
 
@@ -189,7 +192,7 @@ If you want to make a prediction, type:
 ```
 library('vimo')
 
-predict("example_model", data)
+model_predict("example_model", data)
 ```
 
 *"example_model"* is the name of **vimo** model, *data* is the data frame with named columns without target column, or path to *.csv* (must contain **/** sign) file or *hash* of already uploaded data.
@@ -197,19 +200,19 @@ predict("example_model", data)
 Be aware that some models may require from you exactly the same column names in passed data. If you passed data as an object then column names will be fetched by default. If you do not want this behaviour pass as argument *prepare_data* value *False*. You may also easily manually obtain columns with:
 
 ```
-columns = model_info("example_model")$data_info$columns
+columns = model_info("example_model")$columns
 ```
 
 ## Searching for model
 
-You can also search for model with specific tags.
+You can also search for model with some specific restrictions.
 
 Just type:
 
 ```
 library(vimo)
 
-search_model(row = '>1000;<10000;', column='=12;', user='Example user', tags = c('example', 'easily'))
+model_search(row = '>1000;<10000;', column='=12;', user='Example user', tags = c('example', 'easily'))
 ```
 
 You will receive in response all models with at least one of these tags.
