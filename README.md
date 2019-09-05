@@ -23,7 +23,7 @@ pip install weles/python
 ## R
 
 ```
-devtools::install_github("WojciechKretowicz/weles/r/weles")
+devtools::install_github("WojciechKretowicz/weles/r")
 ```
 
 # Usage in Python
