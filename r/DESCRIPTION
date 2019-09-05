@@ -1,4 +1,4 @@
-Package: vimo
+Package: weles
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -6,7 +6,7 @@ Authors@R:
            family = "Kretowicz",
            role = c("aut", "cre"),
            email = "wojtekkretowicz@gmail.com")
-Description: This is a client package for communication with model governance base vimo.
+Description: This is a client package for communication with model governance base weles.
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
