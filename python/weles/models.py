@@ -1,3 +1,8 @@
+"""@package docstring
+The module related to models in the **weles**
+"""
+
+
 import sys
 import requests
 import pickle
@@ -9,14 +14,14 @@ from io import StringIO
 from datetime import datetime
 
 def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
-	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the vimo base.
+	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the **weles** base.
 
 	Parameters
 	----------
 	model : scikit-learn or keras model or string
 		model object or path to the model pickle
 	model_name : string
-		name of the model that will be visible in the vimo
+		name of the model that will be visible in the **weles**
 	model_desc : string
 		description of the model
 	tags : list
@@ -24,7 +29,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	train_dataset : array-like or string
 		array-like or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
 	train_dataset_name : string
-		name of the dataset that will be visible in the vimo
+		name of the dataset that will be visible in the **weles**
 	dataset_desc : string
 		description of the dataset
 	requirements_file : string
@@ -265,7 +270,7 @@ def info(model_name):
 	Parameters
 	----------
 	model_name : string
-		name of the model in the vimo base
+		name of the model in the **weles** base
 
 	Returns
 	-------
@@ -285,7 +290,7 @@ def info(model_name):
 
 def search(language=None, language_version=None, row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
 	"""
-	Search vimo base for models with specific restrictions. If all parameters are set to None, then returns all models' name in vimo.
+	Search **weles** base for models with specific restrictions. If all parameters are set to None, then returns all models' name in **weles**.
 
 	Parameters
 	------
@@ -353,7 +358,7 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 	Parameters
 	----------
 	model_name : string
-		name of the model in the vimo base to make an audit of
+		name of the model in the **weles** base to make an audit of
 	measure : string
 		name of the measure used on model, must be one of supported
 	user : string
@@ -361,11 +366,11 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 	password : string
 		your password
 	data : array-like/string
-		data frame to make an audit on or hash of already uploaded data in the vimo or path to the dataset
+		data frame to make an audit on or hash of already uploaded data in the **weles** or path to the dataset
 	target : string
 		name of the column in the dataset that should be used as the target
 	data_name : string
-		optional, name of the dataset that will be visible in the vimo, unnecessary if data is a hash
+		optional, name of the dataset that will be visible in the **weles**, unnecessary if data is a hash
 	data_desc : string
 		optional, description of the dataset, unnecessary if data is a hash
 

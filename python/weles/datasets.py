@@ -1,3 +1,7 @@
+"""@package docstring
+The module with functions related to datasets in the **weles**
+"""
+
 import sys
 import requests
 import pickle
@@ -9,14 +13,14 @@ from io import StringIO
 from datetime import datetime
 
 def upload(data, data_name, data_desc, user_name, password):
-	"""Upload data to vimo.
+	"""Upload data to **weles**.
 
 	Parameters
 	----------
 	data : array-like/string
 		data to upload or path to this data
 	data_name : string
-		name of the dataset that will be visible in the vimo base
+		name of the dataset that will be visible in the **weles** base
 	data_desc : string
 		desciprtion of the data
 	user_name : string
@@ -103,7 +107,7 @@ def head(dataset_id, n=5):
 	return pd.DataFrame(r.json())
 
 def get(dataset_id):
-	"""Get dataset from the vimo as dataframe.
+	"""Get dataset from the **weles** as dataframe.
 
 	Parameters
 	----------

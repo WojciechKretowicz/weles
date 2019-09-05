@@ -1,3 +1,8 @@
+"""@package docstring
+The module related to users in the **weles**
+"""
+
+
 import sys
 import requests
 import pickle
@@ -10,7 +15,7 @@ from datetime import datetime
 
 def create(user_name, password, mail):
 	"""
-	Function create_userFunction creates new user in the vimo base.
+	Function create_userFunction creates new user in the **weles** base.
 
 	Parameters
 	----------
