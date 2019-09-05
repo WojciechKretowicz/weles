@@ -1,9 +1,9 @@
-#' @title Get an info about the model in **vimo**
+#' @title Get an info about the model in vimo
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' This tool is used for getting a meta data about the model that is already uploaded to vimo.
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param model_name Name of the model in vimo, character
 #'
 #' @return named list containing all meta data about model
 #'
@@ -15,14 +15,20 @@
 #' library("vimo")
 #'
 #' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' model_info("example_model")$model
+#' model_info("example_model")$data
+#' model_info("example_model")$data$dataset_id
 #'
 #' @export
 model_info = function(model_name) {
+
+	# checking input
+	stopifnot(class(model_name) == 'character')
+
+	# receiving data
 	content = httr::content(httr::GET(url = paste0('http://192.168.137.64/models/', model_name, '/info')))
 
+	# formatting
 	audits = content$audits
 
 	auds = list()
@@ -32,6 +38,7 @@ model_info = function(model_name) {
 		auds[[name]] = v
 	}
 
+	# formatting
 	columns = content$columns
 
 	cols = list()
@@ -40,6 +47,7 @@ model_info = function(model_name) {
 		v[as.numeric(names(unlist(columns[[name]])))+1] = unlist(columns[[name]])
 		cols[[name]] = v
 	}
-	
+
+	# return	
 	list(model = content$model, data = content$data, audits = data.frame(auds), columns = data.frame(cols))
 }

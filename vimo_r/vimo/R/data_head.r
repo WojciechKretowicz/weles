@@ -15,16 +15,27 @@
 #' @examples
 #' library("vimo")
 #'
-#' head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+#' head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 10)
 #'
 #' @export
 data_head = function(dataset_id, n=5) {
+
+	# checking input
+	stopifnot(class(dataset_id) == 'character')
+	stopifnot(nchar(dataset_id) == 64)
+	stopifnot(class(n) == 'numeric')
+
+	# getting data
 	df = httr::content(httr::POST(paste0('http://192.168.137.64/datasets/', dataset_id, '/head'), body = list('n' = n)), 'parsed')
+
+	# formatting
 	cols = list()
 	for(name in names(df)) {
 		v = c()
 		v[as.numeric(names(unlist(df[[name]])))+1] = unlist(df[[name]])
 		cols[[name]] = v
 	}
+
+	# return
 	data.frame(cols)
 }

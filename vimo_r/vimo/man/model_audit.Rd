@@ -34,7 +34,8 @@ You can use this function to audit in different ways models already uploaded in 
 \\code{
 library("vimo")
 
-audit_model('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
+model_audit('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
+model_audit('example_model', 'acc', 'Example user', 'example password', 'aaaaaaaaaaaaaaaaaaaaaaaaaa', 'Species')
 }
 
 }

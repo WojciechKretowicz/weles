@@ -217,15 +217,15 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	# uploading data
 	if type(X) == str and reg.search(X) is None:
 		# case when X is a hash
-		info = {'is_hash': 1}
-		info['hash'] = X
+		body = {'is_hash': 1}
+		body['hash'] = X
 
 		# request
 		r = requests.get(url, data = info)
 	elif type(X) == str:
 		# case when X is a path
 
-		info = {'is_hash': 0}
+		body = {'is_hash': 0}
 		files = {'data': open(X, 'rb')}
 
 		# request
@@ -237,21 +237,21 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 		X = pd.DataFrame(X)
 
 		if prepare_columns:
-			columns = model_info(model_name)['data_info']['columns']
-			c = []
-			for col in columns:
-				c.append(col[1])
-			c = c[0:-1]
-			X.columns = c
+			model_info = info(model_name)
+			columns = model_info['columns']
+			target = model_info['model']['target']
+			columns = columns.sort_values('id')
+			columns = columns.loc[columns['name'] != target, 'name']
+			X.columns = columns
 
 		# creating temporary file
 		X.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
 
-		info = {'is_hash': 0}
+		body = {'is_hash': 0}
 		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
 
 		# request
-		r = requests.get(url, files=files, data = info)
+		r = requests.get(url, files=files, data = body)
 
 		# removing temporary file
 		os.remove('.tmp_data_' + timestamp + '.csv')
@@ -324,23 +324,23 @@ def search(language=None, language_version=None, row=None, column=None, missing=
 		Returns a list of models' names that satisfies given restrictions
 	"""
 
-	if not isinstance(language, str):
+	if language is not None and not isinstance(language, str):
 		raise ValueError("language must be a string")
-	if not isinstance(language_version, str):
+	if language_version is not None and not isinstance(language_version, str):
 		raise ValueError("language_version must be a string")
-	if not isinstance(row, str):
+	if row is not None and not isinstance(row, str):
 		raise ValueError("row must be a string")
-	if not isinstance(column, str):
+	if column is not None and not isinstance(column, str):
 		raise ValueError("column must be a string")
-	if not isinstance(missing, str):
+	if missing is not None and not isinstance(missing, str):
 		raise ValueError("missing must be a string")
-	if not isinstance(classes, str):
+	if classes is not None and not isinstance(classes, str):
 		raise ValueError("classes must be a string")
-	if not isinstance(owner, str):
+	if owner is not None and not isinstance(owner, str):
 		raise ValueError("owner must be a string")
-	if not isinstance(tags, list):
+	if tags is not None and not isinstance(tags, list):
 		raise ValueError("tags must be a list")
-	if not isinstance(regex, str):
+	if regex is not None and not isinstance(regex, str):
 		raise ValueError("regex must be a string")
 
 	data = {'language': language, 'language_version': language_version, 'row': row, 'column': column, 'missing': missing, 'classes': classes, 'owner': owner, 'tags': tags, 'regex': regex}

@@ -7,7 +7,7 @@
 user_create(user_name, password, mail)
 }
 \arguments{
-\item{user_name}{your user name in **vimo**, character}
+\item{user_name}{your user name in vimo, character}
 
 \item{password}{your password, character}
 

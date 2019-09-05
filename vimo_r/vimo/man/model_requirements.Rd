@@ -2,26 +2,24 @@
 % Please edit documentation in R/model_requirements.r
 \name{model_requirements}
 \alias{model_requirements}
-\title{Get an info about the dataset in vimo}
+\title{Get package requirements for the model in vimo}
 \usage{
 model_requirements(model)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{model}{name of the model in vimo, character}
 }
 \value{
-named list containing all meta data about model
+named list with requirements
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+You can use this function to download requirements of the model
 }
 \examples{
 library("vimo")
 
-model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+model_requirements("example_model")
+model_requirements("example_model")$pandas
 
 }
 \references{

@@ -2,13 +2,13 @@
 % Please edit documentation in R/model_predict.r
 \name{model_predict}
 \alias{model_predict}
-\title{Make a prediction using **vimo** model}
+\title{Make a prediction using vimo model}
 \usage{
 model_predict(model_name, X, pred_type = "exact",
   prepare_columns = TRUE)
 }
 \arguments{
-\item{model_name}{name of the model in **vimo**}
+\item{model_name}{name of the model in vimo}
 
 \item{X}{data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
 if X is an object and prepare_columns is True, columns' names will be fetched automatically}
@@ -18,7 +18,7 @@ if X is an object and prepare_columns is True, columns' names will be fetched au
 \item{prepare_columns}{if X is an object then columns' names will be fetched automatically}
 }
 \description{
-This tool allows you to make a prediction with model in **vimo**.
+This tool allows you to make a prediction with model in vimo.
 }
 \examples{
 \\code {

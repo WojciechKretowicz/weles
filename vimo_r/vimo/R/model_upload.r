@@ -1,17 +1,17 @@
-#' @title Upload model to **vimo**
+#' @title Upload the model to vimo
 #'
 #' @description
-#' This tool allows you to upload your *mlr* model to model governance base **vimo**.
+#' This tool allows you to upload your mlr, caret or parsnip model to model governance base vimo.
 #'
-#' @param model mlr learner, or path to the mlr model written as '.RDS' file
-#' @param model_name name of the model that will be visible in the **vimo**
+#' @param model mlr, caret or parsnip model, or path to it written as '.RDS' file
+#' @param model_name name of the model that will be visible in the vimo
 #' @param model_desc description of the model
 #' @param tags vector of model's tags, should be vector of strings
 #' @param train_dataset training dataset with named columns and target column as the last one, or path to *.csv* file (must contain **/** sign) or hash of already
 #' uploaded data
 #' @param train_dataset_name name of the training dataset that will be visible in the database
 #' @param dataset_desc description of the dataset
-#' @param your user name
+#' @param user_name your user name
 #' @param password your password
 #'
 #' @references
@@ -34,15 +34,30 @@
 #' @export
 model_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 
+	# checking input
+	stopifnot(class(model_name) == 'character')
+	stopifnot(class(model_desc) == 'character')
+	stopifnot(class(target) == 'character')
+	stopifnot(class(tags) == 'character')
+	stopifnot(class(train_dataset) == 'data.frame' || class(train_dataset) == 'character')
+	stopifnot(class(train_dataset_name) == 'character')
+	stopifnot(class(dataset_desc) == 'character')
+	stopifnot(class(user_name) == 'character')
+	stopifnot(class(password) == 'character')
+
+	# making the hash for temporary files
 	h = digest::digest(c(model_name, model_desc, tags, train_dataset_name, dataset_desc, user_name, password))
 
+	# regex for finding out if model_name is a path
 	if(!grepl('^[a-z0-9A-Z]+$', model_name)) {
 		return("Your model's name contains non alphanumerical characters")
 	}
 
+	# gathering metada
 	ses = sessionInfo()
 	pkg = c(ses$otherPkgs, ses$loadedOnly)
 
+	# packages versions
 	pkg_names = rep('a', length(pkg))
 	pkg_versions = rep('a', length(pkg))
 
@@ -51,9 +66,11 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 		pkg_versions[i] = pkg[[i]]$Version
 	}
 
+	# writting reqiurements
 	requirements = data.frame(pkg_names, pkg_versions)
 	write.table(requirements, paste0('.tmp_requirements_', h, '.txt'), row.names=F, col.names=F, sep=',')
 
+	# next data
 	system = Sys.info()[1]
 	system_release = Sys.info()[2]
 	distribution = strsplit(ses[[4]], split = ' ')[[1]][1]
@@ -65,6 +82,7 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 
 	is_sessionInfo = 1
 
+	# setting flags
 	del_model = F
 	del_train_data = F
 
@@ -88,12 +106,12 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 	# uploading train dataset
 	if(class(train_dataset) == "character" && !grepl("/", train_dataset)) {
 		# case when train_dataset is a hash of already uploaded dataset
+
 		body[['train_dataset_hash']] = train_dataset
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
 
 		body[['train_dataset']] <- httr::upload_file(train_dataset)
-
 		body[['train_dataset_hash']] = 0
 	} else {
 		# case when train_dataset is a matrix
@@ -110,14 +128,22 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 	}
 
 	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
+		# case when model_desc is a path
+
 		body[['model_desc']] = paste0(readLines(model_desc), collapse='')
 	} else if(class(model_desc) == 'character') {
+		# case when model_desc is a string
+
 		body[['model_desc']] = model_desc
 	}
 
 	if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
+		# case when dataset_desc s a path
+
 		body[['dataset_desc']] = paste0(readLines(dataset_desc), collapse='')
 	} else if(class(dataset_desc) == 'character') {
+		# case when dataset_desc is a string
+
 		body[['dataset_desc']] = dataset_desc
 	}
 		
@@ -147,23 +173,31 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 
 	body[['target']] = target
 
+	# list of tags
 	tags = as.list(tags)
 	names(tags) = rep('tags', length(tags))
 	body = c(body, tags)
 
+	# posting
 	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
 	# removing temporary files
 	if(del_model) {
+		# case when there was a temprary model file
+
 		file.remove(paste0('.tmp_model_', h, '.rds'))
 	}
 	if(del_train_data) {
+		# case when there was temporary data file
+
 		file.remove(paste0('.tmp_train_data_', h, '.csv'))
 	}
 
+	# removing temporary files
 	file.remove(paste0('.tmp_ses_', h, '.rds'))
 	file.remove(paste0('.tmp_requirements_', h, '.txt'))
 
+	# return
 	httr::content(r, 'text')
 }
 

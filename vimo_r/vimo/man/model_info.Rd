@@ -2,26 +2,26 @@
 % Please edit documentation in R/model_info.r
 \name{model_info}
 \alias{model_info}
-\title{Get an info about the model in **vimo**}
+\title{Get an info about the model in vimo}
 \usage{
 model_info(model_name)
 }
 \arguments{
-\item{model_name}{Name of the model in **vimo**, character}
+\item{model_name}{Name of the model in vimo, character}
 }
 \value{
 named list containing all meta data about model
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+This tool is used for getting a meta data about the model that is already uploaded to vimo.
 }
 \examples{
 library("vimo")
 
 model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+model_info("example_model")$model
+model_info("example_model")$data
+model_info("example_model")$data$dataset_id
 
 }
 \references{

@@ -2,15 +2,15 @@
 % Please edit documentation in R/model_upload.r
 \name{model_upload}
 \alias{model_upload}
-\title{Upload model to **vimo**}
+\title{Upload the model to vimo}
 \usage{
 model_upload(model, model_name, model_desc, target, tags, train_dataset,
   train_dataset_name, dataset_desc, user_name, password)
 }
 \arguments{
-\item{model}{mlr learner, or path to the mlr model written as '.RDS' file}
+\item{model}{mlr, caret or parsnip model, or path to it written as '.RDS' file}
 
-\item{model_name}{name of the model that will be visible in the **vimo**}
+\item{model_name}{name of the model that will be visible in the vimo}
 
 \item{model_desc}{description of the model}
 
@@ -23,12 +23,12 @@ uploaded data}
 
 \item{dataset_desc}{description of the dataset}
 
-\item{password}{your password}
+\item{user_name}{your user name}
 
-\item{your}{user name}
+\item{password}{your password}
 }
 \description{
-This tool allows you to upload your *mlr* model to model governance base **vimo**.
+This tool allows you to upload your mlr, caret or parsnip model to model governance base vimo.
 }
 \examples{
 \\code{

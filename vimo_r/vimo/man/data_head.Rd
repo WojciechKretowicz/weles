@@ -20,7 +20,7 @@ This tool allows you to view the head of the dataset in the vimo.
 \examples{
 library("vimo")
 
-head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 10)
 
 }
 \references{

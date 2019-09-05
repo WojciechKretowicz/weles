@@ -13,15 +13,15 @@ data_info(dataset_id)
 named list containing all meta data about model
 }
 \description{
-This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+This tool is used for getting a meta data about the model that is already uploaded to vimo.
 }
 \examples{
 library("vimo")
 
-model_info("example_model")
-model_info("example_model")$model_info
-model_info("example_model")$data_info
-model_info("example_model")$data_info$dataset_id
+data_info("aaaaaaaaaaaaaaaaaaaaaaa")
+data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_rows
+data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_columns
+data_info("aaaaaaaaaaaaaaaaaaaaaaa")$columns
 
 }
 \references{

@@ -1,11 +1,11 @@
-#' @title Get an info about the dataset in vimo
+#' @title Get package requirements for the model in vimo
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' You can use this function to download requirements of the model
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param model name of the model in vimo, character
 #'
-#' @return named list containing all meta data about model
+#' @return named list with requirements
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -14,12 +14,15 @@
 #' @examples
 #' library("vimo")
 #'
-#' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' model_requirements("example_model")
+#' model_requirements("example_model")$pandas
 #'
 #' @export
 model_requirements = function(model) {
+
+	# checking input
+	stopifnot(class(model) == 'character')
+
+	# making the request and return
 	httr::content(httr::GET(url = paste0('http://192.168.137.64/models/', model, '/requirements')))
 }

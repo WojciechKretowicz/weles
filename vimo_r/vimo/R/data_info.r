@@ -1,7 +1,7 @@
 #' @title Get an info about the dataset in vimo
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to **vimo**.
+#' This tool is used for getting a meta data about the model that is already uploaded to vimo.
 #'
 #' @param model_name Name of the model in **vimo**, character
 #'
@@ -14,15 +14,22 @@
 #' @examples
 #' library("vimo")
 #'
-#' model_info("example_model")
-#' model_info("example_model")$model_info
-#' model_info("example_model")$data_info
-#' model_info("example_model")$data_info$dataset_id
+#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")
+#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_rows
+#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_columns
+#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$columns
 #'
 #' @export
 data_info = function(dataset_id) {
+
+	# checking input
+	stopifnot(class(dataset_id) == 'character')
+	stopifnot(nchar(dataset_id) == 64)
+
+	# receiving data
 	content = httr::content(httr::GET(url = paste0('http://192.168.137.64/datasets/', dataset_id, '/info')))
 
+	# formatting
 	columns = content$columns
 	content[['columns']] = NULL
 
@@ -33,5 +40,6 @@ data_info = function(dataset_id) {
 		cols[[name]] = v
 	}
 
+	# return
 	list(data = content, columns = data.frame(cols))
 }

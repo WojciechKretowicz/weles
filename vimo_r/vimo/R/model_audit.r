@@ -22,16 +22,30 @@
 #' \code{
 #' library("vimo")
 #'
-#' audit_model('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
+#' model_audit('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
+#' model_audit('example_model', 'acc', 'Example user', 'example password', 'aaaaaaaaaaaaaaaaaaaaaaaaaa', 'Species')
 #' }
 #'
 #' @export
 model_audit = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
 
+	# checking input
+	stopifnot(class(model_name) == 'character')
+	stopifnot(class(measure) == 'character')
+	stopifnot(class(user) == 'character')
+	stopifnot(class(password) == 'character')
+	stopifnot(class(data) == 'data.frame' || (class(data) == 'character' && nchar(data) == 64 && !is.na(data_name) && !is.na(data_desc)))
+	stopifnot(class(target) == 'character')
+	stopifnot(is.na(data_name) || class(data_name) == 'character')
+	stopifnot(is.na(data_desc) || class(data_desc) == 'character')
+
+	# making the body for the request
 	info = list('model_name'= model_name, 'measure'= measure, 'user'= user, 'password'= password, 'target'= target)
 
+	# creating hash for the temporary files
 	h = digest::digest(Sys.time())
 
+	# flag
 	del_data = FALSE
 
 	# uploading data
@@ -61,13 +75,18 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 
 		info[['data']] = upload_file(paste0('.tmp_data_', h, '.csv'))
 
+		# setting the flag
 		del_data = TRUE
 
+		# uploading
 		r = httr::POST('http://192.168.137.64/models/audit', body=info)
 	}
 
 	if (del_data) {
+		# case when there was temporary data file
 		file.remove(paste0('.tmp_data_', h, '.csv'))
 	}
+
+	# return
 	httr::content(r, 'text')
 }

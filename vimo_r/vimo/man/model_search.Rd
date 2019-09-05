@@ -24,9 +24,11 @@ model_search(language = NA, language_version = NA, row = NA,
 \item{owner}{show only models created by this user}
 
 \item{tags}{vector of tags, should be all strings}
+
+\item{regex}{regex for searching names of models}
 }
 \value{
-vector of models' names that have at least one common tag with those passed as the argument
+vector of models' names satisfying those restrictions
 }
 \description{
 Function allows you advanced search of models in vimo. If all parameters are default then returns all models' name in vimo.
@@ -41,7 +43,8 @@ search_model(row='<15000;', tags = c('example', 'easy'))
 
 search_model(column='>10;<15;', owner='Example user')
 
-search_model(row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags = c('example', 'easy'), regex='^R')
+search_model(language='python', language_version='3.6.8', row='>1000;<10000;', column='=14;', classes='=2;', missing='=0;', owner='Example user', tags=
+c('example', 'easy'), regex='^R')
 }
 
 }
