@@ -75,8 +75,8 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	url = 'http://192.168.137.64/models/post'
 
 	# collecting system info
-	if platform.system() == 'Linux':
-		info = {'system': platform.system(),
+	#if platform.system() == 'Linux':
+	info = {'system': platform.system(),
 			'system_release': platform.release(),
 			'distribution': platform.linux_distribution()[0],
 			'distribution_version': platform.linux_distribution()[1],
