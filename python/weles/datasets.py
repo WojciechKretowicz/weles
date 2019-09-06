@@ -42,7 +42,7 @@ def upload(data, data_name, data_desc, user_name, password):
 		raise ValueError("data_desc must be a string")
 	if not isinstance(user_name, str):
 		raise ValueError("user_name must be a string")
-	if not isinstance(password):
+	if not isinstance(password, str):
 		raise ValueError("password must be a string")
 
 	# url to post
@@ -104,7 +104,8 @@ def head(dataset_id, n=5):
 		raise ValueError("n must be an integer")
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
-	return pd.DataFrame(r.json())
+
+	return pd.read_csv(StringIO(r.text)).drop(columns = 'Unnamed: 0')
 
 def get(dataset_id):
 	"""Get dataset from the **weles** as dataframe.
@@ -127,7 +128,7 @@ def get(dataset_id):
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
 
-	return pd.DataFrame(r.json())
+	return pd.read_csv(StringIO(r.text)).drop(columns = 'Unnamed: 0')
 
 def info(dataset_id):
 	"""Get all metadata about dataset
