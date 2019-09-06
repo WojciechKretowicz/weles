@@ -226,7 +226,7 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 		body['hash'] = X
 
 		# request
-		r = requests.get(url, data = info)
+		r = requests.get(url, data = body)
 	elif type(X) == str:
 		# case when X is a path
 
@@ -234,7 +234,7 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 		files = {'data': open(X, 'rb')}
 
 		# request
-		r = requests.get(url, files=files, data=info)
+		r = requests.get(url, files=files, data=body)
 	else:
 		# case when X is an object
 
@@ -443,7 +443,7 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 	if del_data:
 		os.remove('.tmp_data_' + timestamp + '.csv')
 
-	return r.text
+	return pd.read_csv(StringIO(r.text), header=None)
 
 def requirements(model):
 	"""Get the list of package requirements

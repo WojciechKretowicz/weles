@@ -179,6 +179,7 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 	body = c(body, tags)
 
 	# posting
+	print('posting')
 	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
 	# removing temporary files

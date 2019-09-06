@@ -34,7 +34,7 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 	stopifnot(class(measure) == 'character')
 	stopifnot(class(user) == 'character')
 	stopifnot(class(password) == 'character')
-	stopifnot(class(data) == 'data.frame' || (class(data) == 'character' && nchar(data) == 64 && !is.na(data_name) && !is.na(data_desc)))
+	stopifnot(class(data) == 'data.frame' || (class(data) == 'character' && nchar(data) == 64))
 	stopifnot(class(target) == 'character')
 	stopifnot(is.na(data_name) || class(data_name) == 'character')
 	stopifnot(is.na(data_desc) || class(data_desc) == 'character')
@@ -88,5 +88,6 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 	}
 
 	# return
-	httr::content(r, 'text')
+	r = httr::content(r, 'text')
+	read.csv(text = r, header = F)[,1]
 }

@@ -23,7 +23,7 @@
 #' @export
 data_upload = function(data, data_name, data_desc, user_name, password) {
 
-	stopifnot(class(data) == 'data.frame' || class(data) == 'character')
+	#stopifnot(class(data) == 'data.frame' || class(data) == 'character')
 	stopifnot(class(data_name) == 'character')
 	stopifnot(class(data_desc) == 'character')
 	stopifnot(class(user_name) == 'character')
