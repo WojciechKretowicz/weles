@@ -1,10 +1,10 @@
-#' @title Upload the dataset to the vimo
+#' @title Upload the dataset to the weles
 #'
 #' @description
-#' This function uploads the dataset and needed metadata to the vimo.
+#' This function uploads the dataset and needed metadata to the weles.
 #'
 #' @param data the data frame to upload or path
-#' @param data_name name of the dataset that will be visible in the vimo
+#' @param data_name name of the dataset that will be visible in the weles
 #' @param data_desc description of the dataset
 #' @param user_name your user name
 #' @param password your password
@@ -16,12 +16,12 @@
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
-#' library("vimo")
+#' library("weles")
 #'
-#' upload_data(X, 'data name', 'Example user', 'example password')
+#' datasets_upload(X, 'data name', 'Example user', 'example password')
 #'
 #' @export
-data_upload = function(data, data_name, data_desc, user_name, password) {
+datasets_upload = function(data, data_name, data_desc, user_name, password) {
 
 	#stopifnot(class(data) == 'data.frame' || class(data) == 'character')
 	stopifnot(class(data_name) == 'character')

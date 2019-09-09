@@ -1,7 +1,7 @@
-#' @title Get the head of the dataset in the vimo
+#' @title Get the head of the dataset in the weles
 #'
 #' @description
-#' This tool allows you to view the head of the dataset in the vimo.
+#' This tool allows you to view the head of the dataset in the weles.
 #'
 #' @param dataset_id the dataset hash
 #' @param n number of rows to show
@@ -13,12 +13,12 @@
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
-#' library("vimo")
+#' library("weles")
 #'
-#' head_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 10)
+#' datasets_head('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 10)
 #'
 #' @export
-data_head = function(dataset_id, n=5) {
+datasets_head = function(dataset_id, n=5) {
 
 	# checking input
 	stopifnot(class(dataset_id) == 'character')

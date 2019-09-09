@@ -1,9 +1,9 @@
-#' @title Make a prediction using vimo model
+#' @title Make a prediction using weles model
 #'
 #' @description
-#' This tool allows you to make a prediction with model in vimo.
+#' This tool allows you to make a prediction with model in weles.
 #'
-#' @param model_name name of the model in vimo
+#' @param model_name name of the model in weles
 #' @param X data to make a prediction of, must have named columns, may be path to *.csv* file (must contatin **/** sign) or *hash* of already uploaded data,
 #' if X is an object and prepare_columns is True, columns' names will be fetched automatically
 #' @param pred_type type of prediction, 'exact' or 'prob'
@@ -15,13 +15,13 @@
 #'
 #' @examples
 #' \code {
-#' library("vimo")
+#' library("weles")
 #'
-#' predict("example_model", iris[,-5])
+#' models_predict("example_model", iris[,-5])
 #' }
 #'
 #' @export
-model_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
+models_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = TRUE) {
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

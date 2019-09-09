@@ -1,9 +1,9 @@
-#' @title Get an info about the dataset in vimo
+#' @title Get an info about the dataset in weles
 #'
 #' @description
-#' This tool is used for getting a meta data about the model that is already uploaded to vimo.
+#' This tool is used for getting a meta data about the model that is already uploaded to weles.
 #'
-#' @param model_name Name of the model in **vimo**, character
+#' @param model_name Name of the model in weles, character
 #'
 #' @return named list containing all meta data about model
 #'
@@ -12,15 +12,15 @@
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
-#' library("vimo")
+#' library("weles")
 #'
-#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")
-#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_rows
-#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_columns
-#' data_info("aaaaaaaaaaaaaaaaaaaaaaa")$columns
+#' datasets_info("aaaaaaaaaaaaaaaaaaaaaaa")
+#' datasets_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_rows
+#' datasets_info("aaaaaaaaaaaaaaaaaaaaaaa")$number_of_columns
+#' datasets_info("aaaaaaaaaaaaaaaaaaaaaaa")$columns
 #'
 #' @export
-data_info = function(dataset_id) {
+datasets_info = function(dataset_id) {
 
 	# checking input
 	stopifnot(class(dataset_id) == 'character')

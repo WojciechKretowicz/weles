@@ -1,7 +1,7 @@
-#' @title Get the dataset from **vimo**
+#' @title Get the dataset from weles
 #'
 #' @description
-#' You can use this function to download the dataset from vimo as a data frame
+#' You can use this function to download the dataset from weles as a data frame
 #'
 #' @param dataset_id hash of the dataset
 #'
@@ -12,12 +12,12 @@
 #' \href{http://192.168.137.64/datasets}{\bold{datasets}}
 #'
 #' @examples
-#' library("vimo")
+#' library("weles")
 #'
-#' get_data('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+#' datasets_get('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 #'
 #' @export
-data_get = function(dataset_id) {
+datasets_get = function(dataset_id) {
 
 	# checking input
 	stopifnot(class(dataset_id) == 'character')

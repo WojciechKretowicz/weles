@@ -1,11 +1,12 @@
-#' @title Upload the model to vimo
+#' @title Upload the model to weles
 #'
 #' @description
-#' This tool allows you to upload your mlr, caret or parsnip model to model governance base vimo.
+#' This tool allows you to upload your mlr, caret or parsnip model to model governance base weles.
 #'
 #' @param model mlr, caret or parsnip model, or path to it written as '.RDS' file
-#' @param model_name name of the model that will be visible in the vimo
+#' @param model_name name of the model that will be visible in the weles
 #' @param model_desc description of the model
+#' @param target name of the target column
 #' @param tags vector of model's tags, should be vector of strings
 #' @param train_dataset training dataset with named columns and target column as the last one, or path to *.csv* file (must contain **/** sign) or hash of already
 #' uploaded data
@@ -20,19 +21,18 @@
 #'
 #' @examples
 #' \code{
-#' library("vimo")
+#' library("weles")
 #' library("mlr")
 #'
 #' task = makeClassifTask(data = iris, target = 'Species')
 #' model = makeLearner("classif.randomForest")
 #' model = train(model, task)
 #'
-#' upload(model, "example_model", "This is an example model", c('example', 'easy'), iris, "example_training_data", 'This is an example data', 'Example user', 
-#' 'example password')
+#' models_upload(model, "example_model", "This is an example model", 'Species', c('example', 'easy'), iris, "example_training_data", 'This is an example data', 'Example user', 'example password')
 #' }
 #'
 #' @export
-model_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
+models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

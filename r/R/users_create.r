@@ -1,9 +1,9 @@
-#' @title Create user in the vimo
+#' @title Create user in the weles
 #'
 #' @description
-#' This function is used to create an user account. You need this to have an access to all features in vimo.
+#' This function is used to create an user account. You need this to have an access to all features in weles.
 #'
-#' @param user_name your user name in vimo, character
+#' @param user_name your user name in weles, character
 #' @param password your password, character
 #' @param mail your mail, character
 #'
@@ -15,13 +15,13 @@
 #'
 #' @examples
 #' \code{
-#' library("vimo")
+#' library("weles")
 #'
-#' create_user("Example user", "example password", "example_mail@gmail.com")
+#' users_create("Example user", "example password", "example_mail@gmail.com")
 #' }
 #'
 #' @export
-user_create = function(user_name, password, mail) {
+users_create = function(user_name, password, mail) {
 
 	# checking input
 	stopifnot(class(user_name) == 'character')

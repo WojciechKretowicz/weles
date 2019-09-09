@@ -1,15 +1,15 @@
-#' @title Make an audit of the model in the vimo
+#' @title Make an audit of the model in the weles
 #'
 #' @description
-#' You can use this function to audit in different ways models already uploaded in the vimo.
+#' You can use this function to audit in different ways models already uploaded in the weles.
 #'
-#' @param model_name name of the model in the vimo, character
+#' @param model_name name of the model in the weles, character
 #' @param measure name of the measure used in the audit, character
 #' @param user your user name, character
 #' @param password your password
 #' @param data data frame to make an audit on or path or hash of already uploaded dataset
 #' @param target name of the target column in the dataset
-#' @param data_name name of the dataset that will be visible in the vimo, unnecessary if data is a hash
+#' @param data_name name of the dataset that will be visible in the weles, unnecessary if data is a hash
 #' @param data_desc description of the dataset, unnecessary if data is a hash
 #'
 #' @return result of the audit or information if somethin went wrong
@@ -20,14 +20,14 @@
 #'
 #' @examples
 #' \code{
-#' library("vimo")
+#' library("weles")
 #'
-#' model_audit('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
-#' model_audit('example_model', 'acc', 'Example user', 'example password', 'aaaaaaaaaaaaaaaaaaaaaaaaaa', 'Species')
+#' models_audit('example_model', 'mae', 'Example user', 'example password', iris, 'Species', 'iris', 'Flowers')
+#' models_audit('example_model', 'acc', 'Example user', 'example password', 'aaaaaaaaaaaaaaaaaaaaaaaaaa', 'Species')
 #' }
 #'
 #' @export
-model_audit = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
+models_audit = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
 
 	# checking input
 	stopifnot(class(model_name) == 'character')
