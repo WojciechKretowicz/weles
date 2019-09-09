@@ -94,13 +94,15 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 		# case when model is an object
 
 		# creating temporary file
-		saveRDS(model, paste0('.tmp_model_', h, '.rds'))
+		#saveRDS(model, paste0('.tmp_model_', h, '.rds'))
+		saveRDS(model, paste0(tmpdir(), '/tmp_model_', h, '.rds'))
 
 		# uploading model
-		body = list('model' = httr::upload_file(paste0('.tmp_model_', h, '.rds')))
+		#body = list('model' = httr::upload_file(paste0('.tmp_model_', h, '.rds')))
+		body = list('model' = httr::upload_file(paste0(tmpdir(), '/tmp_model_', h, '.rds')))
 
 		# setting flag
-		del_model = T
+		#del_model = T
 	}
 
 	body[['is_train_dataset_hash']] = 0
