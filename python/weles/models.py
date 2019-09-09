@@ -130,7 +130,6 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 
 		train_dataset = pd.read_csv(train_dataset)
 		info['train_dataset'] = train_dataset.to_csv(index=False)
-		#files['train_dataset'] = open(train_dataset, 'rb')
 
 	else:
 		# case when train_dataset is a matrix
@@ -138,15 +137,8 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		# conversion to pandas data frame
 		train_dataset = pd.DataFrame(train_dataset)
 
-		# creating temporary file
-#		train_dataset.to_csv('.tmp_train_data_' + timestamp + '.csv', index = False)
-
 		# uploading dataset
-#		files['train_dataset'] = open('.tmp_train_data_' + timestamp + '.csv', 'rb')
 		info['train_dataset'] = train_dataset.to_csv(index=False)
-
-		# setting flag
-#		del_train_data = True
 
 	if type(model_desc) == str and reg.search(model_desc) is not None:
 		info['model_desc'] = open(model, 'rb').read()
@@ -235,10 +227,11 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 		# case when X is a path
 
 		body = {'is_hash': 0}
-		files = {'data': open(X, 'rb')}
+		X = pd.read_csv(X)
+		body['data'] = X.to_csv(index=False)
 
 		# request
-		r = requests.get(url, files=files, data=body)
+		r = requests.get(url, data=body)
 	else:
 		# case when X is an object
 
@@ -253,17 +246,10 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 			columns = columns.loc[columns['name'] != target, 'name']
 			X.columns = columns
 
-		# creating temporary file
-		X.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
-
-		body = {'is_hash': 0}
-		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+		body = {'is_hash': 0, 'data': X.to_csv(index=False)}
 
 		# request
-		r = requests.get(url, files=files, data = body)
-
-		# removing temporary file
-		os.remove('.tmp_data_' + timestamp + '.csv')
+		r = requests.get(url, data = body)
 
 	return pd.read_csv(StringIO(r.text), header=None)
 
@@ -419,12 +405,14 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	elif type(data) == str:
 		# case when data is a path
-		files = {'data': open(data, 'rb')}
+		#files = {'data': open(data, 'rb')}
 		info['is_hash'] = 0
 		info['data_name'] = data_name
 		info['data_desc'] = data_desc
+		data = pd.read_csv(data)
+		info['data'] = data.to_csv(index=False)
 
-		r = requests.post('http://192.168.137.64/models/audit', files=files, data=info)
+		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	else:
 		# case when data is an object
 
@@ -436,13 +424,15 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		data = pd.DataFrame(data)
 
 		# creating temporary file
-		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
+		#data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
 
-		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+		#files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
 
-		del_data = True
+		info['data'] = data.to_csv(index=False)
 
-		r = requests.post('http://192.168.137.64/models/audit', files=files, data=info)
+		#del_data = True
+
+		r = requests.post('http://192.168.137.64/models/audit', data=info)
 
 	if del_data:
 		os.remove('.tmp_data_' + timestamp + '.csv')

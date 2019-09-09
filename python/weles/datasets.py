@@ -69,17 +69,10 @@ def upload(data, data_name, data_desc, user_name, password):
 		# conversion to pandas data frame
 		data = pd.DataFrame(data)
 
-		# creating temporary file
-		#data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
-
-		#files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
 		info['data'] = data.to_csv(index=False)
 
 		# request
 		r = requests.post(url, data = info)
-
-		# removing temporary file
-		#os.remove('.tmp_data_' + timestamp + '.csv')
 
 	return r.text
 
