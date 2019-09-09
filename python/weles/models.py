@@ -75,7 +75,6 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	url = 'http://192.168.137.64/models/post'
 
 	# collecting system info
-	#if platform.system() == 'Linux':
 	info = {'system': platform.system(),
 			'system_release': platform.release(),
 			'distribution': platform.linux_distribution()[0],
@@ -94,10 +93,6 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	# init of flag if train_dataset is a hash
 	info['is_train_dataset_hash'] = 0
 
-	# init of flags what temporary file should be removed at the end of function
-	del_model = False
-	del_train_data = False
-
 	# uploading model
 	if type(model) == str:
 		# case when model is a path
@@ -105,15 +100,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	else:
 		# case when model is an object
 
-		# creating temporary file
-		with open('.tmp_model_' + timestamp +'.pkl', 'wb') as fd:
-			pickle.dump(model, fd)
-
-		# uploading model
-		files = {'model': open('.tmp_model_' + timestamp + '.pkl', 'rb')}
-
-		# setting flag
-		del_model = True
+		files = {'model': pickle.dumps(model)}
 
 	# creating regexp to findout if the train_dataset is a path or id
 	reg = re.compile("/")
@@ -167,12 +154,6 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 
 	# creating request
 	r = requests.post(url, files = files, data = info)
-
-	# removing temporary files
-	if del_model:
-		os.remove('.tmp_model_' + timestamp + '.pkl')
-	if del_train_data:
-		os.remove('.tmp_train_data_' + timestamp + '.csv')
 
 	return r.text
 
@@ -423,19 +404,9 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		# conversion to pandas data frame
 		data = pd.DataFrame(data)
 
-		# creating temporary file
-		#data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
-
-		#files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
-
 		info['data'] = data.to_csv(index=False)
 
-		#del_data = True
-
 		r = requests.post('http://192.168.137.64/models/audit', data=info)
-
-	if del_data:
-		os.remove('.tmp_data_' + timestamp + '.csv')
 
 	return pd.read_csv(StringIO(r.text), header=None)
 
