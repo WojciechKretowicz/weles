@@ -58,7 +58,6 @@ def upload(data, data_name, data_desc, user_name, password):
 		# case when data is a path
 
 		data = pd.read_csv(data)
-		#files = {'data': open(data, 'rb')}
 		info['data'] = data.to_csv(index=False)
 
 		# request
@@ -101,7 +100,7 @@ def head(dataset_id, n=5):
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/head', data = {'n': n})
 
-	return pd.read_csv(StringIO(r.text)).drop(columns = 'Unnamed: 0')
+	return pd.read_csv(StringIO(r.text))
 
 def get(dataset_id):
 	"""Get dataset from the **weles** as dataframe.
@@ -124,7 +123,7 @@ def get(dataset_id):
 
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id)
 
-	return pd.read_csv(StringIO(r.text)).drop(columns = 'Unnamed: 0')
+	return pd.read_csv(StringIO(r.text))
 
 def info(dataset_id):
 	"""Get all metadata about dataset

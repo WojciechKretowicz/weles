@@ -38,9 +38,6 @@ model_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = 
 	# body for the request
 	body = list()
 
-	# flag telling if delete file
-	del = FALSE
-
 	# uploading data
 	if(class(X) == "character" && !grepl("/", X)) {
 		# case when X is a hash
@@ -50,7 +47,10 @@ model_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = 
 	} else if(class(X) == "character") {
 		# case when X is a path
 		body[['is_hash']] =  0
-		body[['data']] = httr::upload_file(X)
+
+		data = read.csv(X)
+
+		body[['data']] = paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 	} else {
 		# case when X is an object
 
@@ -64,23 +64,14 @@ model_predict <- function(model_name, X, pred_type = 'exact', prepare_columns = 
 			names(X) = columns
 		}
 
-		# creating temporary file
-		write.table(X, paste0('.tmp_data_', h, '.csv'), row.names=F, col.names=T, sep=',')
+		data = paste0(c(paste0(colnames(X), collapse=','), paste0(apply(X,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 
 		body[['is_hash']] =  0
-		body[['data']] = httr::upload_file(paste0('.tmp_data_', h, '.csv'))
-
-		# removing temporary file
-		del = TRUE
+		body[['data']] = data
 	}
 
 	# uploading
 	r = httr::content(httr::POST(url = url, body = body), as='text')
-
-	# deleting temporary files
-	if(del) {
-		file.remove(paste0('.tmp_data_', h, '.csv'))
-	}
 
 	# return
 	read.csv(text = r, header = F)[,1]

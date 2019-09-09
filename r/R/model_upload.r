@@ -68,7 +68,7 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 
 	# writting reqiurements
 	requirements = data.frame(pkg_names, pkg_versions)
-	write.table(requirements, paste0('.tmp_requirements_', h, '.txt'), row.names=F, col.names=F, sep=',')
+	write.table(requirements, paste0(tempdir(), '/tmp_requirements_', h, '.txt'), row.names=F, col.names=F, sep=',')
 
 	# next data
 	system = Sys.info()[1]
@@ -82,10 +82,6 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 
 	is_sessionInfo = 1
 
-	# setting flags
-	del_model = F
-	del_train_data = F
-
 	# uploading model
 	if(class(model) == "character") {
 		# case when model is a path
@@ -94,11 +90,9 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 		# case when model is an object
 
 		# creating temporary file
-		#saveRDS(model, paste0('.tmp_model_', h, '.rds'))
 		saveRDS(model, paste0(tempdir(), '/tmp_model_', h, '.rds'))
 
 		# uploading model
-		#body = list('model' = httr::upload_file(paste0('.tmp_model_', h, '.rds')))
 		body = list('model' = httr::upload_file(paste0(tempdir(), '/tmp_model_', h, '.rds')))
 
 		# setting flag
@@ -121,15 +115,8 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 	} else {
 		# case when train_dataset is a matrix
 
-		# creating temporary file
-		#write.table(train_dataset, paste0('.tmp_train_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
-
 		# uploading dataset
-		#body[['train_dataset']] = httr::upload_file(paste0('.tmp_train_data_', h, '.csv'))
 		body[['train_dataset']] = paste0(c(paste0(colnames(train_dataset), collapse=','), paste0(apply(train_dataset,1, paste0, collapse=','), collapse='\n')), collapse='\n')
-
-		# setting flag
-#		del_train_data = T
 	}
 
 	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
@@ -154,12 +141,12 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 		
 
 	# uploading requirements file
-	body[['requirements']] = httr::upload_file(paste0('.tmp_requirements_', h, '.txt'))
+	body[['requirements']] = httr::upload_file(paste0(tempdir(), '/tmp_requirements_', h, '.txt'))
 
 	# uploading sessionInfo
 	body[['is_sessionInfo']] = 1
-	saveRDS(ses, paste0('.tmp_ses_', h, '.rds'))
-	body[['sessionInfo']] = httr::upload_file(paste0('.tmp_ses_', h, '.rds'))
+	saveRDS(ses, paste0(tempdir(), '/tmp_ses_', h, '.rds'))
+	body[['sessionInfo']] = httr::upload_file(paste0(tempdir(), '/tmp_ses_', h, '.rds'))
 
 	body[['model_name']] = model_name
 	body[['system']] = system
@@ -186,22 +173,6 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 	# posting
 	print('posting')
 	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
-
-	# removing temporary files
-	if(del_model) {
-		# case when there was a temprary model file
-
-		file.remove(paste0('.tmp_model_', h, '.rds'))
-	}
-	if(del_train_data) {
-		# case when there was temporary data file
-
-		file.remove(paste0('.tmp_train_data_', h, '.csv'))
-	}
-
-	# removing temporary files
-	file.remove(paste0('.tmp_ses_', h, '.rds'))
-	file.remove(paste0('.tmp_requirements_', h, '.txt'))
 
 	# return
 	httr::content(r, 'text')

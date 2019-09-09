@@ -128,12 +128,12 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		info['train_dataset'] = train_dataset.to_csv(index=False)
 
 	if type(model_desc) == str and reg.search(model_desc) is not None:
-		info['model_desc'] = open(model, 'rb').read()
+		info['model_desc'] = open(model_desc, 'rb').read()
 	elif type(model_desc) == str:
 		info['model_desc'] = model_desc
 
 	if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
-		info['dataset_desc'] = open(model, 'rb').read()
+		info['dataset_desc'] = open(dataset_desc, 'rb').read()
 	elif type(dataset_desc) == str:
 		info['dataset_desc'] = dataset_desc
 
@@ -386,7 +386,6 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	elif type(data) == str:
 		# case when data is a path
-		#files = {'data': open(data, 'rb')}
 		info['is_hash'] = 0
 		info['data_name'] = data_name
 		info['data_desc'] = data_desc

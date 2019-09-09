@@ -45,9 +45,6 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 	# creating hash for the temporary files
 	h = digest::digest(Sys.time())
 
-	# flag
-	del_data = FALSE
-
 	# uploading data
 	if (class(data) == 'character' && !grepl('/', data)) {
 		# case when data is a hash
@@ -60,7 +57,10 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 		info[['is_hash']] = 0
 		info[['data_name']] = data_name
 		info[['data_desc']] = data_desc
-		info[['data']] = upload_file(data)
+
+		data = read.csv(data)
+
+		info[['data']] = paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 
 		r = httr::POST('http://192.168.137.64/models/audit', body=info)
 	} else {
@@ -71,20 +71,10 @@ model_audit = function(model_name, measure, user, password, data, target, data_n
 		info[['data_desc']] = data_desc
 
 		# creating temporary file
-		write.table(data, paste0('.tmp_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
-
-		info[['data']] = upload_file(paste0('.tmp_data_', h, '.csv'))
-
-		# setting the flag
-		del_data = TRUE
+		info[['data']] <- paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 
 		# uploading
 		r = httr::POST('http://192.168.137.64/models/audit', body=info)
-	}
-
-	if (del_data) {
-		# case when there was temporary data file
-		file.remove(paste0('.tmp_data_', h, '.csv'))
 	}
 
 	# return
