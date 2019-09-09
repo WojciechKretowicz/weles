@@ -57,10 +57,12 @@ def upload(data, data_name, data_desc, user_name, password):
 	if type(data) == str:
 		# case when data is a path
 
-		files = {'data': open(data, 'rb')}
+		data = pd.read_csv(data)
+		#files = {'data': open(data, 'rb')}
+		info['data'] = data.to_csv(index=False)
 
 		# request
-		r = requests.post(url, files=files, data=info)
+		r = requests.post(url, data=info)
 	else:
 		# case when data is an object
 
@@ -68,15 +70,16 @@ def upload(data, data_name, data_desc, user_name, password):
 		data = pd.DataFrame(data)
 
 		# creating temporary file
-		data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
+		#data.to_csv('.tmp_data_' + timestamp + '.csv', index = False)
 
-		files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+		#files = {'data': open('.tmp_data_' + timestamp + '.csv', 'rb')}
+		info['data'] = data.to_csv(index=False)
 
 		# request
-		r = requests.post(url, files=files, data = info)
+		r = requests.post(url, data = info)
 
 		# removing temporary file
-		os.remove('.tmp_data_' + timestamp + '.csv')
+		#os.remove('.tmp_data_' + timestamp + '.csv')
 
 	return r.text
 

@@ -92,7 +92,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 
 
 	# init of flag if train_dataset is a hash
-	info['train_dataset_hash'] = 0
+	info['is_train_dataset_hash'] = 0
 
 	# init of flags what temporary file should be removed at the end of function
 	del_model = False
@@ -123,11 +123,14 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		# case when train_dataset is a hash of already uploaded dataset
 
 		info['train_dataset_hash'] = train_dataset
+		info['is_train_dataset_hash'] = 1
 
 	elif type(train_dataset) == str:
 		# case when train_dataset is a path to dataset
 
-		files['train_dataset'] = open(train_dataset, 'rb')
+		train_dataset = pd.read_csv(train_dataset)
+		info['train_dataset'] = train_dataset.to_csv(index=False)
+		#files['train_dataset'] = open(train_dataset, 'rb')
 
 	else:
 		# case when train_dataset is a matrix
@@ -136,13 +139,14 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		train_dataset = pd.DataFrame(train_dataset)
 
 		# creating temporary file
-		train_dataset.to_csv('.tmp_train_data_' + timestamp + '.csv', index = False)
+#		train_dataset.to_csv('.tmp_train_data_' + timestamp + '.csv', index = False)
 
 		# uploading dataset
-		files['train_dataset'] = open('.tmp_train_data_' + timestamp + '.csv', 'rb')
+#		files['train_dataset'] = open('.tmp_train_data_' + timestamp + '.csv', 'rb')
+		info['train_dataset'] = train_dataset.to_csv(index=False)
 
 		# setting flag
-		del_train_data = True
+#		del_train_data = True
 
 	if type(model_desc) == str and reg.search(model_desc) is not None:
 		info['model_desc'] = open(model, 'rb').read()

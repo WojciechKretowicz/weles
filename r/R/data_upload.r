@@ -35,34 +35,22 @@ data_upload = function(data, data_name, data_desc, user_name, password) {
 	# making the hash for the temporary files
 	h = digest::digest(c(data_name, user_name, password, Sys.time()))
 
-	# setting flag
-	del_data = FALSE
-
 	if(class(data) == "character") {
 		# case when data is a path to dataset
 
-		body[['data']] <- httr::upload_file(data)
+		data = read.csv(data)
+
+		body[['data']] <- paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 	} else {
 		# case when dataset is a matrix
 
-		# creating temporary file
-		write.table(data, paste0('.tmp_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
-
 		# uploading dataset
-		body[['data']] = httr::upload_file(paste0('.tmp_data_', h, '.csv'))
+		body[['data']] = paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 
-		# setting flag
-		del_data = T
 	}
 
 	# uploading data
 	r = httr::content(httr::POST(url = 'http://192.168.137.64/datasets/post', body=body), 'text')
-
-	if(del_data) {
-		# if there was temporary data file
-
-		file.remove(paste0('.tmp_data_', h, '.csv'))
-	}
 
 	# return
 	r

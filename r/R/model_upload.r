@@ -103,28 +103,31 @@ model_upload <- function(model, model_name, model_desc, target, tags, train_data
 		del_model = T
 	}
 
+	body[['is_train_dataset_hash']] = 0
 	# uploading train dataset
 	if(class(train_dataset) == "character" && !grepl("/", train_dataset)) {
 		# case when train_dataset is a hash of already uploaded dataset
 
 		body[['train_dataset_hash']] = train_dataset
+		body[['is_train_dataset_hash']] = 1
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
 
-		body[['train_dataset']] <- httr::upload_file(train_dataset)
-		body[['train_dataset_hash']] = 0
+#		body[['train_dataset']] <- httr::upload_file(train_dataset)
+		train_dataset = read.csv(train_dataset)
+		body[['train_dataset']] = paste0(c(paste0(colnames(train_dataset), collapse=','), paste0(apply(train_dataset,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 	} else {
 		# case when train_dataset is a matrix
 
 		# creating temporary file
-		write.table(train_dataset, paste0('.tmp_train_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
+		#write.table(train_dataset, paste0('.tmp_train_data_', h, '.csv'), col.names=T, row.names=F, sep=',')
 
 		# uploading dataset
-		body[['train_dataset']] = httr::upload_file(paste0('.tmp_train_data_', h, '.csv'))
-		body[['train_dataset_hash']]= 0
+		#body[['train_dataset']] = httr::upload_file(paste0('.tmp_train_data_', h, '.csv'))
+		body[['train_dataset']] = paste0(c(paste0(colnames(train_dataset), collapse=','), paste0(apply(train_dataset,1, paste0, collapse=','), collapse='\n')), collapse='\n')
 
 		# setting flag
-		del_train_data = T
+#		del_train_data = T
 	}
 
 	if(class(model_desc) == 'character' && grepl("/", model_desc)) {
