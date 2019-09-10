@@ -109,7 +109,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	if type(train_dataset) == str and reg.search(train_dataset) is None:
 		# case when train_dataset is a hash of already uploaded dataset
 
-		info['train_dataset_hash'] = train_dataset
+		info['train_dataset'] = train_dataset
 		info['is_train_dataset_hash'] = 1
 
 	elif type(train_dataset) == str:
@@ -260,8 +260,7 @@ def info(model_name):
 	return r
 
 def search(language=None, language_version=None, row=None, column=None, missing=None, classes=None, owner=None, tags=None, regex=None):
-	"""
-	Search **weles** base for models with specific restrictions. If all parameters are set to None, then returns all models' name in **weles**.
+	"""Search weles base for models with specific restrictions. If all parameters are set to None, then returns all models' name in weles.
 
 	Parameters
 	------
