@@ -5,8 +5,6 @@
 #'
 #' @param model_name name of the model in the weles, character
 #' @param measure name of the measure used in the audit, character
-#' @param user your user name, character
-#' @param password your password
 #' @param data data frame to make an audit on or path or hash of already uploaded dataset
 #' @param target name of the target column in the dataset
 #' @param data_name name of the dataset that will be visible in the weles, unnecessary if data is a hash
@@ -27,7 +25,10 @@
 #' }
 #'
 #' @export
-models_audit = function(model_name, measure, user, password, data, target, data_name=NA, data_desc=NA) {
+models_audit = function(model_name, measure, data, target, data_name=NA, data_desc=NA) {
+
+	user = readline('user: ')
+	password = readline('password: ')
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

@@ -13,16 +13,12 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def create(user_name, password, mail):
+def create(mail):
 	"""
 	Function create_userFunction creates new user in the **weles** base.
 
 	Parameters
 	----------
-	user_name : string
-		your user name, has to be unique, if such user already exists you will get such information in response
-	password : string
-		your password, passwords are hashed
 	mail : string
 		your mail
 
@@ -31,6 +27,9 @@ def create(user_name, password, mail):
 	string
 		Information if creating account was successful.
 	"""
+
+	user_name = input('user: ')
+	password = input('password: ')
 
 	if not isinstance(user_name, str):
 		raise ValueError("user_name must be a string")

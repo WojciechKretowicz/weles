@@ -4,17 +4,13 @@
 \alias{models_audit}
 \title{Make an audit of the model in the weles}
 \usage{
-models_audit(model_name, measure, user, password, data, target,
-  data_name = NA, data_desc = NA)
+models_audit(model_name, measure, data, target, data_name = NA,
+  data_desc = NA)
 }
 \arguments{
 \item{model_name}{name of the model in the weles, character}
 
 \item{measure}{name of the measure used in the audit, character}
-
-\item{user}{your user name, character}
-
-\item{password}{your password}
 
 \item{data}{data frame to make an audit on or path or hash of already uploaded dataset}
 

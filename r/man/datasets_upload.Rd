@@ -4,7 +4,7 @@
 \alias{datasets_upload}
 \title{Upload the dataset to the weles}
 \usage{
-datasets_upload(data, data_name, data_desc, user_name, password)
+datasets_upload(data, data_name, data_desc)
 }
 \arguments{
 \item{data}{the data frame to upload or path}
@@ -12,10 +12,6 @@ datasets_upload(data, data_name, data_desc, user_name, password)
 \item{data_name}{name of the dataset that will be visible in the weles}
 
 \item{data_desc}{description of the dataset}
-
-\item{user_name}{your user name}
-
-\item{password}{your password}
 }
 \value{
 information if uploading the data was successful

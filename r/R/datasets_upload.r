@@ -6,8 +6,6 @@
 #' @param data the data frame to upload or path
 #' @param data_name name of the dataset that will be visible in the weles
 #' @param data_desc description of the dataset
-#' @param user_name your user name
-#' @param password your password
 #'
 #' @return information if uploading the data was successful
 #'
@@ -21,7 +19,10 @@
 #' datasets_upload(X, 'data name', 'Example user', 'example password')
 #'
 #' @export
-datasets_upload = function(data, data_name, data_desc, user_name, password) {
+datasets_upload = function(data, data_name, data_desc) {
+
+	user_name = readline('user: ')
+	password = readline('password: ')
 
 	#stopifnot(class(data) == 'data.frame' || class(data) == 'character')
 	stopifnot(class(data_name) == 'character')

@@ -12,7 +12,7 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def upload(data, data_name, data_desc, user_name, password):
+def upload(data, data_name, data_desc):
 	"""Upload data to **weles**.
 
 	Parameters
@@ -23,16 +23,15 @@ def upload(data, data_name, data_desc, user_name, password):
 		name of the dataset that will be visible in the **weles** base
 	data_desc : string
 		desciprtion of the data
-	user_name : string
-		your user name
-	password : string
-		your password
 
 	Returns
 	-------
 	string
 		information if uploading data was successful
 	"""
+
+	user_name = input('user: ')
+	password = input('password: ')
 
 	if not isinstance(data, (str, pd.DataFrame)):
 		raise ValueError("data must be a string or a data frame")

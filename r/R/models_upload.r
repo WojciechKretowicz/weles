@@ -12,8 +12,6 @@
 #' uploaded data
 #' @param train_dataset_name name of the training dataset that will be visible in the database
 #' @param dataset_desc description of the dataset
-#' @param user_name your user name
-#' @param password your password
 #'
 #' @references
 #' \href{http://192.168.137.64/models}{\bold{models}}
@@ -32,7 +30,10 @@
 #' }
 #'
 #' @export
-models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, user_name, password) {
+models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file=NA) {
+
+	user_name = readline('user: ')
+	password = readline('password: ')
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

@@ -4,13 +4,9 @@
 \alias{users_create}
 \title{Create user in the weles}
 \usage{
-users_create(user_name, password, mail)
+users_create(mail)
 }
 \arguments{
-\item{user_name}{your user name in weles, character}
-
-\item{password}{your password, character}
-
 \item{mail}{your mail, character}
 }
 \value{

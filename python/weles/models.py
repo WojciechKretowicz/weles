@@ -13,7 +13,7 @@ import re
 from io import StringIO
 from datetime import datetime
 
-def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file, user_name, password):
+def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file):
 	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the **weles** base.
 
 	Parameters
@@ -44,6 +44,9 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	string
 		Returns an information if uploading the model was successful.
 	"""
+
+	user_name = input('user: ')
+	password = input('password: ')
 
 	if not isinstance(model_name, str):
 		raise ValueError("model_name must be a string")
@@ -322,7 +325,7 @@ def search(language=None, language_version=None, row=None, column=None, missing=
 	r = requests.get('http://192.168.137.64/models/search', data=data)
 	return r.json()['models']
 
-def audit(model_name, measure, user, password, data, target, data_name=None, data_desc=None):
+def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 	"""Audit the model
 
 	Parameters
@@ -331,10 +334,6 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 		name of the model in the **weles** base to make an audit of
 	measure : string
 		name of the measure used on model, must be one of supported
-	user : string
-		your user name
-	password : string
-		your password
 	data : array-like/string
 		data frame to make an audit on or hash of already uploaded data in the **weles** or path to the dataset
 	target : string
@@ -349,6 +348,9 @@ def audit(model_name, measure, user, password, data, target, data_name=None, dat
 	string/float
 		return the result of the audit or information if something went wrong
 	"""
+
+	user = input('user: ')
+	password = input('password: ')
 
 	if not isinstance(model_name, str):
 		raise ValueError("model_name must be a string")

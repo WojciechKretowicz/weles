@@ -5,7 +5,7 @@
 \title{Upload the model to weles}
 \usage{
 models_upload(model, model_name, model_desc, target, tags, train_dataset,
-  train_dataset_name, dataset_desc, user_name, password)
+  train_dataset_name, dataset_desc, requirements_file = NA)
 }
 \arguments{
 \item{model}{mlr, caret or parsnip model, or path to it written as '.RDS' file}
@@ -24,10 +24,6 @@ uploaded data}
 \item{train_dataset_name}{name of the training dataset that will be visible in the database}
 
 \item{dataset_desc}{description of the dataset}
-
-\item{user_name}{your user name}
-
-\item{password}{your password}
 }
 \description{
 This tool allows you to upload your mlr, caret or parsnip model to model governance base weles.
