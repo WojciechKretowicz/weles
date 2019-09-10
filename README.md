@@ -76,7 +76,7 @@ Now we are ready to push our model to the base. Its name has to be unique in the
 ```
 from weles import models
 
-models.upload(model, 'example_model', 'This is an example model.', ['example', 'easy'], train_data_to_upload, 'example_data', 'This is an example dataset', 'requirements.txt', 'Example user', 'example password')
+models.upload(model, 'example_model', 'This is an example model.', 'target', ['example', 'easy'], train_data_to_upload, 'example_data', 'This is an example dataset', 'requirements.txt', 'Example user', 'example password')
 ```
 
 In this moment *model* is being uploaded to the **weles**. If requested environment had not been already created in the **weles**, it will be created. During this time your Python sesion will be suspended. You will get the message if the uploading was successful.
@@ -149,9 +149,9 @@ First you need to have a trained mlr, caret or parsnip model. Let's make an mlr 
 ```
 library(mlr)
 
-task = makeClassifTask(data = iris, target = 'Species')
-model = makeLearner("clasif.randomForest")
-model = train(model, task)
+task <- makeClassifTask(data = iris, target = 'Species')
+model <- makeLearner("classif.randomForest")
+model <- train(model, task)
 ```
 
 To upload the model to the base you need to import client package and pass classifier, its name that will be visible in the **weles**, its description, tags, training dataset with target column and column names, its name, its description, your user name and password. Names should be unique.
@@ -159,7 +159,7 @@ To upload the model to the base you need to import client package and pass class
 ```
 library('weles')
 
-model_upload(model, 'example_model', 'This is an example model.', c('example', 'easy'), iris, 'example_data', 'This is an example data', 'Example user', 'example_password')
+model_upload(model, 'example_model', 'This is an example model.', 'Species', c('example', 'easy'), iris, 'example_data', 'This is an example data', 'Example user', 'example_password')
 ```
 
 In this moment *model* is being uploaded to the **weles**. If requested environment had not been already created in the **weles**, it will be created. During this time your R sesion will be suspended.
@@ -199,7 +199,7 @@ model_predict("example_model", data)
 Be aware that some models may require from you exactly the same column names in passed data. If you passed data as an object then column names will be fetched by default. If you do not want this behaviour pass as argument *prepare_data* value *False*. You may also easily manually obtain columns with:
 
 ```
-columns = model_info("example_model")$columns
+columns <- model_info("example_model")$columns
 ```
 
 ## Searching for model
