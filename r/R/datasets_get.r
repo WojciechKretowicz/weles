@@ -26,5 +26,5 @@ datasets_get = function(dataset_id) {
 	# getting dataset	
 	df = httr::content(httr::GET(paste0('http://192.168.137.64/datasets/', dataset_id)), 'text')
 	result = read.csv(text = df)
-	result[,-1]
+	result[,]
 }

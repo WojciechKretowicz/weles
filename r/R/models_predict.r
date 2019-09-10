@@ -56,7 +56,7 @@ models_predict <- function(model_name, X, pred_type = 'exact', prepare_columns =
 
 		# fetching columns
 		if(prepare_columns) {
-			info = model_info(model_name)
+			info = models_info(model_name)
 			columns = info$columns
 			target = info$model$target
 			columns = columns[order(columns$id), 'name']
