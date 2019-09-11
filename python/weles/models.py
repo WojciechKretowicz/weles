@@ -390,36 +390,47 @@ def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 	# regexp to find out if data is a path
 	reg = re.compile("/")
 
-
+	info['is_data_name'] = 1
 	# uploading data
 	if type(data) == str and reg.search(data) is None:
 		# case when data is a hash
 		info['is_hash'] = 1
 		info['hash'] = data
 
+		if data_name is not None and data_desc is None:
+			raise ValueError('If your dataset name is specified, you need to pass dataset_desc')
+		if data_name is None and data_desc is not None:
+			raise ValueError('If your dataset description is specified, you need to pass its name')
+
+		if data_name is None:
+			info['is_data_name'] = 0
+
 		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	elif type(data) == str:
 		# case when data is a path
 		info['is_hash'] = 0
-		info['data_name'] = data_name
-		info['data_desc'] = data_desc
+
 		data = pd.read_csv(data)
 		info['data'] = data.to_csv(index=False)
-
-		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	else:
 		# case when data is an object
 
 		info['is_hash'] = 0
-		info['data_name'] = data_name
-		info['data_desc'] = data_desc
 
 		# conversion to pandas data frame
 		data = pd.DataFrame(data)
 
 		info['data'] = data.to_csv(index=False)
 
-		r = requests.post('http://192.168.137.64/models/audit', data=info)
+	if info['is_data_name'] == 1:
+
+		info['data_name'] = data_name
+		if type(data_desc) == str and reg.search(data_desc) is not None:
+			info['data_desc'] = open(data_desc, 'rb').read()
+		elif type(data_desc) == str:
+			info['data_desc'] = data_desc
+
+	r = requests.post('http://192.168.137.64/models/audit', data=info)
 
 	return pd.read_csv(StringIO(r.text), header=None)
 

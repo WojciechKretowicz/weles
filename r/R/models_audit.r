@@ -46,37 +46,50 @@ models_audit = function(model_name, measure, data, target, data_name=NA, data_de
 	# creating hash for the temporary files
 	h = digest::digest(Sys.time())
 
+	info[['is_data_name']] = 1
 	# uploading data
 	if (class(data) == 'character' && !grepl('/', data)) {
 		# case when data is a hash
 		info[['is_hash']] = 1
 		info[['hash']] = data
 
-		r = httr::POST('http://192.168.137.64/models/audit', body=info)
+		if(!is.na(data_name) && is.na(data_desc) {
+			stop('If your dataset name is specified, you need to pass dataset_desc')
+		}
+		if(is.na(data_name) && is.na(data_desc) {
+			stop('If your dataset description is specified, you need to pass its name')
+		}
+
+		if(is.na(data_name) {
+			info[['is_data_name']] = 0
+		}
 	} else if (class(data) == 'character') {
 		# case when data is a path
 		info[['is_hash']] = 0
-		info[['data_name']] = data_name
-		info[['data_desc']] = data_desc
 
 		data = read.csv(data)
 
 		info[['data']] = paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
-
-		r = httr::POST('http://192.168.137.64/models/audit', body=info)
 	} else {
 		# case when data is an object
 
 		info[['is_hash']] = 0
-		info[['data_name']] = data_name
-		info[['data_desc']] = data_desc
 
-		# creating temporary file
 		info[['data']] <- paste0(c(paste0(colnames(data), collapse=','), paste0(apply(data,1, paste0, collapse=','), collapse='\n')), collapse='\n')
-
-		# uploading
-		r = httr::POST('http://192.168.137.64/models/audit', body=info)
 	}
+
+	if(info[['is_data_name']] == 1) {
+		info[['data_name']] = data_name
+
+		if(class(data_desc) == 'character' && grepl('/', data)) {
+			info[['data_desc']] = paste0(readLines(dataset_desc), collapse='')
+		} else if(class(data_desc) == 'character') {
+			info[['data_desc']] = data_desc
+		}
+	}
+
+	# uploading
+	r = httr::POST('http://192.168.137.64/models/audit', body=info)
 
 	# return
 	r = httr::content(r, 'text')
