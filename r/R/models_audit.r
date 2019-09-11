@@ -53,14 +53,14 @@ models_audit = function(model_name, measure, data, target, data_name=NA, data_de
 		info[['is_hash']] = 1
 		info[['hash']] = data
 
-		if(!is.na(data_name) && is.na(data_desc) {
+		if(!is.na(data_name) && is.na(data_desc)) {
 			stop('If your dataset name is specified, you need to pass dataset_desc')
 		}
-		if(is.na(data_name) && is.na(data_desc) {
+		if(is.na(data_name) && !is.na(data_desc)) {
 			stop('If your dataset description is specified, you need to pass its name')
 		}
 
-		if(is.na(data_name) {
+		if(is.na(data_name)) {
 			info[['is_data_name']] = 0
 		}
 	} else if (class(data) == 'character') {
@@ -92,6 +92,7 @@ models_audit = function(model_name, measure, data, target, data_name=NA, data_de
 	r = httr::POST('http://192.168.137.64/models/audit', body=info)
 
 	# return
-	r = httr::content(r, 'text')
-	read.csv(text = r, header = F)[,1]
+	#r = httr::content(r, 'text')
+	#read.csv(text = r, header = F)[,1]
+	httr::content(r)
 }

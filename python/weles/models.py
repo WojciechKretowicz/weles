@@ -272,6 +272,7 @@ def info(model_name):
 	r = r.json()
 	r['audits'] = pd.DataFrame(r['audits'])
 	r['columns'] = pd.DataFrame(r['columns'])
+	r['aliases'] = pd.DataFrame(r['aliases'])
 
 	return r
 
@@ -405,7 +406,6 @@ def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 		if data_name is None:
 			info['is_data_name'] = 0
 
-		r = requests.post('http://192.168.137.64/models/audit', data=info)
 	elif type(data) == str:
 		# case when data is a path
 		info['is_hash'] = 0
@@ -432,7 +432,7 @@ def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 
 	r = requests.post('http://192.168.137.64/models/audit', data=info)
 
-	return pd.read_csv(StringIO(r.text), header=None)
+	return r.json()
 
 def requirements(model):
 	"""Get the list of package requirements

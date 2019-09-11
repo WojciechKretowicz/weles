@@ -40,6 +40,13 @@ datasets_info = function(dataset_id) {
 		cols[[name]] = v
 	}
 
+	als = list()
+	for(name in names(aliases)) {
+		v = c()
+		v[as.numeric(names(unlist(aliases[[name]])))+1] = unlist(aliases[[name]])
+		als[[name]] = v
+	}
+
 	# return
-	list(data = content, columns = data.frame(cols))
+	list(data = content, columns = data.frame(cols), aliases = data.frame(als))
 }

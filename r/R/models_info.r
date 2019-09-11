@@ -48,6 +48,16 @@ models_info = function(model_name) {
 		cols[[name]] = v
 	}
 
+	# formatting
+	aliases = content$aliases
+
+	als = list()
+	for(name in names(aliases)) {
+		v = c()
+		v[as.numeric(names(unlist(aliases[[name]])))+1] = unlist(aliases[[name]])
+		als[[name]] = v
+	}
+
 	# return	
-	list(model = content$model, data = content$data, audits = data.frame(auds), columns = data.frame(cols))
+	list(model = content$model, data = content$data, audits = data.frame(auds), columns = data.frame(cols), aliases = data.frame(als))
 }

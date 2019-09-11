@@ -146,5 +146,6 @@ def info(dataset_id):
 	r = requests.get('http://192.168.137.64/datasets/' + dataset_id + '/info')
 	r = r.json()
 	r['columns'] = pd.DataFrame(r['columns'])
+	r['aliases'] = pd.DataFrame(r['aliases'])
 
 	return r
