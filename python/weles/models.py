@@ -12,8 +12,9 @@ import platform
 import re
 from io import StringIO
 from datetime import datetime
+import tempfile
 
-def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file):
+def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name=None, dataset_desc=None, requirements_file=None):
 	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the **weles** base.
 
 	Parameters
@@ -58,11 +59,11 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		raise ValueError("tags must be a list")
 	if not isinstance(train_dataset, (str, pd.DataFrame)):
 		raise ValueError("train_dataset must be a string or pandas data frame")
-	if not isinstance(train_dataset_name, str):
+	if train_dataset_name is not None and not isinstance(train_dataset_name, str):
 		raise ValueError("train_dataset_name must be a string")
-	if not isinstance(dataset_desc, str):
+	if dataset_desc is not None and not isinstance(dataset_desc, str):
 		raise ValueError("dataset_desc must be a string")
-	if not isinstance(requirements_file, str):
+	if requirements_file is not None and not isinstance(requirements_file, str):
 		raise ValueError("requirements_file must be a string")
 	if not isinstance(user_name, str):
 		raise ValueError("user_name must be a string")
@@ -88,7 +89,6 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 			'processor': platform.machine()}
 
 	info['model_name'] = model_name
-	info['train_data_name'] = train_dataset_name
 
 	info['target'] = target
 
@@ -108,12 +108,22 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	# creating regexp to findout if the train_dataset is a path or id
 	reg = re.compile("/")
 
+	info['is_train_name'] = 1
+
 	# uploading train dataset
 	if type(train_dataset) == str and reg.search(train_dataset) is None:
 		# case when train_dataset is a hash of already uploaded dataset
 
 		info['train_dataset'] = train_dataset
 		info['is_train_dataset_hash'] = 1
+
+		if train_dataset_name is not None and dataset_desc is None:
+			raise ValueError('If your dataset name is specified, you need to pass dataset_desc')
+		if train_dataset_name is None and dataset_desc is not None:
+			raise ValueError('If your dataset description is specified, you need to pass its name')
+
+		if train_dataset_name is None:
+			info['is_train_name'] = 0
 
 	elif type(train_dataset) == str:
 		# case when train_dataset is a path to dataset
@@ -135,10 +145,13 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	elif type(model_desc) == str:
 		info['model_desc'] = model_desc
 
-	if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
-		info['dataset_desc'] = open(dataset_desc, 'rb').read()
-	elif type(dataset_desc) == str:
-		info['dataset_desc'] = dataset_desc
+	if info['is_train_name'] == 1:
+		info['train_data_name'] = train_dataset_name
+
+		if type(dataset_desc) == str and reg.search(dataset_desc) is not None:
+			info['dataset_desc'] = open(dataset_desc, 'rb').read()
+		elif type(dataset_desc) == str:
+			info['dataset_desc'] = dataset_desc
 
 	# uploading requirements file
 	files['requirements'] = open(requirements_file, 'rb')
