@@ -30,7 +30,7 @@
 #' }
 #'
 #' @export
-models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name, dataset_desc, requirements_file=NA) {
+models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name=NA, dataset_desc=NA, requirements_file=NA) {
 
 	user_name = readline('user: ')
 	password = readline('password: ')
@@ -41,8 +41,8 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 	stopifnot(class(target) == 'character')
 	stopifnot(class(tags) == 'character')
 	stopifnot(class(train_dataset) == 'data.frame' || class(train_dataset) == 'character')
-	stopifnot(class(train_dataset_name) == 'character')
-	stopifnot(class(dataset_desc) == 'character')
+	stopifnot(is.na(train_dataset_name) || class(train_dataset_name) == 'character')
+	stopifnot(is.na(dataset_desc) || class(dataset_desc) == 'character')
 	stopifnot(class(user_name) == 'character')
 	stopifnot(class(password) == 'character')
 
@@ -101,12 +101,27 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 	}
 
 	body[['is_train_dataset_hash']] = 0
+
+	body[['is_train_name']] = 1
+
 	# uploading train dataset
 	if(class(train_dataset) == "character" && !grepl("/", train_dataset)) {
 		# case when train_dataset is a hash of already uploaded dataset
 
-		body[['train_dataset_hash']] = train_dataset
+		body[['train_dataset']] = train_dataset
 		body[['is_train_dataset_hash']] = 1
+
+		if(!is.na(train_dataset_name) && is.na(dataset_desc)) {
+			stop('If your dataset name is specified, you need to pass dataset_desc')
+		}
+		if(is.na(train_dataset_name) && !is.na(dataset_desc)) {
+			stop('If your dataset description is specified, you need to pass its name')
+		}
+
+		if(is.na(train_dataset_name)) {
+			body[['is_train_name']] = 0
+		}
+
 	} else if(class(train_dataset) == "character") {
 		# case when train_dataset is a path to dataset
 
@@ -130,16 +145,16 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 		body[['model_desc']] = model_desc
 	}
 
-	if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
-		# case when dataset_desc s a path
 
-		body[['dataset_desc']] = paste0(readLines(dataset_desc), collapse='')
-	} else if(class(dataset_desc) == 'character') {
-		# case when dataset_desc is a string
+	if(body[['is_train_name']] == 1) {
+		body[['train_data_name']] = train_dataset_name
 
-		body[['dataset_desc']] = dataset_desc
-	}
-		
+		if(class(dataset_desc) == 'character' && grepl("/", dataset_desc)) {
+			body[['dataset_desc']] = paste0(readLines(dataset_desc), collapse='')
+		} else if(class(dataset_desc) == 'character') {
+			body[['dataset_desc']] = dataset_desc
+		}
+	}	
 
 	# uploading requirements file
 	body[['requirements']] = httr::upload_file(paste0(tempdir(), '/tmp_requirements_', h, '.txt'))
@@ -159,8 +174,6 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 	body[['architecture']] = architecture
 	body[['processor']] = processor
 
-	body[['train_data_name']] = train_dataset_name
-
 	body[['user_name']] = user_name
 	body[['password']] = password
 
@@ -176,6 +189,6 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 	r = httr::POST(url = 'http://192.168.137.64/models/post', body = body)
 
 	# return
-	httr::content(r, 'text')
+	httr::content(r)
 }
 

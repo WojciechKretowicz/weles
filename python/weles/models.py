@@ -171,7 +171,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	# creating request
 	r = requests.post(url, files = files, data = info)
 
-	return r.text
+	return r.json()
 
 def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""

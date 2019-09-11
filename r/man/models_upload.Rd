@@ -5,7 +5,7 @@
 \title{Upload the model to weles}
 \usage{
 models_upload(model, model_name, model_desc, target, tags, train_dataset,
-  train_dataset_name, dataset_desc, requirements_file = NA)
+  train_dataset_name = NA, dataset_desc = NA, requirements_file = NA)
 }
 \arguments{
 \item{model}{mlr, caret or parsnip model, or path to it written as '.RDS' file}
