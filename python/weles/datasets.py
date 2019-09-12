@@ -11,6 +11,7 @@ import platform
 import re
 from io import StringIO
 from datetime import datetime
+from getpass import getpass
 
 def upload(data, data_name, data_desc):
 	"""Upload data to **weles**.
@@ -31,7 +32,7 @@ def upload(data, data_name, data_desc):
 	"""
 
 	user_name = input('user: ')
-	password = input('password: ')
+	password = getpass('password: ')
 
 	if not isinstance(data, (str, pd.DataFrame)):
 		raise ValueError("data must be a string or a data frame")

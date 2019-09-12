@@ -12,6 +12,7 @@ import platform
 import re
 from io import StringIO
 from datetime import datetime
+from getpass import getpass
 
 def create(mail):
 	"""
@@ -29,7 +30,11 @@ def create(mail):
 	"""
 
 	user_name = input('user: ')
-	password = input('password: ')
+	password = getpass('password: ')
+	password2 = getpass('password: ')
+
+	if password != password2:
+		raise ValueError('You entered two different passwords')
 
 	if not isinstance(user_name, str):
 		raise ValueError("user_name must be a string")

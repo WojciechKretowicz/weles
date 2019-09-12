@@ -13,6 +13,7 @@ import re
 from io import StringIO
 from datetime import datetime
 import tempfile
+from getpass import getpass
 
 def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name=None, dataset_desc=None, requirements_file=None):
 	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the **weles** base.
@@ -47,7 +48,7 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	"""
 
 	user_name = input('user: ')
-	password = input('password: ')
+	password = getpass('password: ')
 
 	if not isinstance(model_name, str):
 		raise ValueError("model_name must be a string")
@@ -364,7 +365,7 @@ def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 	"""
 
 	user = input('user: ')
-	password = input('password: ')
+	password = getpass('password: ')
 
 	if not isinstance(model_name, str):
 		raise ValueError("model_name must be a string")

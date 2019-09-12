@@ -28,7 +28,7 @@
 models_audit = function(model_name, measure, data, target, data_name=NA, data_desc=NA) {
 
 	user = readline('user: ')
-	password = readline('password: ')
+	password = getPass::getPass('password: ')
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

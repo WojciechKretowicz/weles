@@ -22,7 +22,7 @@
 datasets_upload = function(data, data_name, data_desc) {
 
 	user_name = readline('user: ')
-	password = readline('password: ')
+	password = getPass::getPass('password: ')
 
 	#stopifnot(class(data) == 'data.frame' || class(data) == 'character')
 	stopifnot(class(data_name) == 'character')

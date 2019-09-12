@@ -33,7 +33,7 @@
 models_upload <- function(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name=NA, dataset_desc=NA, requirements_file=NA) {
 
 	user_name = readline('user: ')
-	password = readline('password: ')
+	password = getPass::getPass('password: ')
 
 	# checking input
 	stopifnot(class(model_name) == 'character')

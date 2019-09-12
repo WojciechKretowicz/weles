@@ -22,7 +22,10 @@
 users_create = function(mail) {
 
 	user_name = readline('user: ')
-	password = readline('password: ')
+	password = getPass::getPass('password: ')
+	password2 = getPass::getPass('password: ')
+
+	stopifnot(password == password2)
 
 	# checking input
 	stopifnot(class(user_name) == 'character')
