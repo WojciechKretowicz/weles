@@ -50,7 +50,7 @@ models_upload <- function(model, model_name, model_desc, target, tags, train_dat
 	h = digest::digest(c(model_name, model_desc, tags, train_dataset_name, dataset_desc, user_name, password))
 
 	# regex for finding out if model_name is a path
-	if(!grepl('^[a-z0-9A-Z]+$', model_name)) {
+	if(!grepl('^[a-z0-9A-Z_]+$', model_name)) {
 		return("Your model's name contains non alphanumerical characters")
 	}
 
