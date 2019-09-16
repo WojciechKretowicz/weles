@@ -27,6 +27,13 @@ def create(mail):
 	-------
 	string
 		Information if creating account was successful.
+
+	Examples
+	--------
+	users.create('exaplemail@gmail.com')
+		-> user: 'example_user'
+		-> password:
+		-> password:
 	"""
 
 	user_name = input('user: ')

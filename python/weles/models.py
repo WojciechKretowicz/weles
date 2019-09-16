@@ -12,8 +12,9 @@ import platform
 import re
 from io import StringIO
 from datetime import datetime
-import tempfile
 from getpass import getpass
+from tqdm import tqdm
+import time
 
 def upload(model, model_name, model_desc, target, tags, train_dataset, train_dataset_name=None, dataset_desc=None, requirements_file=None):
 	"""Function uploads scikit-learn or keras model, the training set and all needed metadata to the **weles** base.
@@ -28,8 +29,8 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 		description of the model
 	tags : list
 		list of tags
-	train_dataset : array-like or string
-		array-like or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
+	train_dataset : pandas.DataFrame or string
+		pandas.DataFrame or path to csv file (must contain '/') or hash of already uploaded data, structure X|Y is required
 	train_dataset_name : string
 		name of the dataset that will be visible in the **weles**
 	dataset_desc : string
@@ -44,7 +45,21 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 	Returns
 	-------
 	string
-		Returns an information if uploading the model was successful.
+		id of the uploading
+
+	Examples
+	--------
+	models.upload(model, 'Example_model', 'This is the example model', 'Species', ['example', 'easy'], iris, 'iris', 'Example dataset', 'req')
+		-> user: Example user
+		-> password:
+
+	models.upload(model, 'Example_model', 'This is the example model', 'Species', ['example', 'easy'], 'aaaaaaaaaaaaaa', 'iris', 'Example dataset', 'req')
+		-> user: Example user
+		-> password:
+
+	models.upload(model, 'Example_model', 'This is the example model', 'Species', ['example', 'easy'], 'aaaaaaaaaaaaaa', None, None, 'req')
+		-> user: Example user
+		-> password:
 	"""
 
 	user_name = input('user: ')
@@ -174,6 +189,53 @@ def upload(model, model_name, model_desc, target, tags, train_dataset, train_dat
 
 	return r.json()
 
+def status(task_id, interactive = True):
+	"""Get the information about the progress of the uploading model
+
+	Parameters
+	----------
+	task_id : string
+		task id, it is always returned by the models.upload function
+	interactive : bool, optional
+		display progress bar if true
+
+	Returns
+	-------
+	dict
+		dictionary with metadata about uploading model
+
+	Examples
+	--------
+	models.status('aaaaaaaaaaaaaaaaaaaaaa')
+
+	models.status('aaaaaaaaaaaaaaaaaaaaaa', interactive=False)
+
+	models.status('aaaaaaaaaaaaaaaaaaaaaa')['model_existed']
+
+	models.status('aaaaaaaaaaaaaaaaaaaaaa')['added_alias_for_data']
+	"""
+
+	# url
+	url = 'http://192.168.137.64/models/status/' + task_id
+
+	# getting metadata
+	r = requests.get(url).json()
+
+	# display progressbar
+	if interactive:
+		with tqdm(total = r['total']) as bar:
+			bar.update(r['current'])
+			bar.set_description(r['status'])
+			prev = r['current']
+			while r['state'] != 'SUCCESS':
+				time.sleep(3)
+				r = requests.get(url).json()
+				bar.update(r['current'] - prev)
+				bar.set_description(r['status'])
+				prev = r['current']
+
+	return r
+
 def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	"""
 	Function uses model in the database to make a prediction on X.
@@ -182,9 +244,8 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 	----------
 	model_name : string
 		name of the model in the base that you want to use
-	X : array-like/string
-		array-like or path to csv file (must containt '/') or hash of already uploaded dataset,
-		must have column names if prepare_columns is set to False
+	X : pandas.DataFrame/string
+		pandas data frame or path to csv file (must containt '/') or hash of already uploaded dataset, must have column names if prepare_columns is set to False
 	pred_type : string
 		type of the prediction: exact/prob
 	prepare_columns : boolean
@@ -192,8 +253,14 @@ def predict(model_name, X, pred_type = 'exact', prepare_columns = True):
 
 	Returns
 	-------
-	array-like
+	pandas.DataFrame
 		Returns a pandas data frame with made predictions.
+
+	Examples
+	--------
+	models.predict('example_model', iris.drop(column='Species'))
+
+	models.predict('example_model', data, prepare_columns=False)
 	"""
 
 	if not isinstance(model_name, str):
@@ -264,6 +331,14 @@ def info(model_name):
 	-------
 	dict
 		dictionary with fields: model, data, columns and audits containing all metadata about the model
+
+	Examples
+	--------
+	models.info('example_model')
+
+	models.info('example_model')['columns]'
+
+	models.info('example_model')['data']['dataset_id']
 	"""
 
 	if not isinstance(model_name, str):
@@ -315,6 +390,14 @@ def search(language=None, language_version=None, row=None, column=None, missing=
 	-------
 	list
 		Returns a list of models' names that satisfies given restrictions
+
+	Examples
+	--------
+	models.search(language='r', column='>10;<20;', row='<2600;', tags=['iris', 'example'])
+
+	models.search(owner='Example user')
+
+	models.search(regex='^abc.*xxx$')
 	"""
 
 	if language is not None and not isinstance(language, str):
@@ -362,6 +445,16 @@ def audit(model_name, measure, data, target, data_name=None, data_desc=None):
 	-------
 	string/float
 		return the result of the audit or information if something went wrong
+
+	Examples
+	--------
+	models.audit('example_model', 'acc', iris, 'Species', 'iris', 'example dataset')
+		-> user: 'example_user'
+		-> password:
+
+	models.audit('example_model', 'mae', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'target')
+		-> user: 'example_user'
+		-> password:
 	"""
 
 	user = input('user: ')
@@ -447,6 +540,10 @@ def requirements(model):
 	-------
 	dict
 		listed requirements
+
+	Examples
+	--------
+	models.requirements('example_model')
 	"""
 
 	if not isinstance(model, str):

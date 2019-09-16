@@ -21,7 +21,7 @@ def upload(data, data_name, data_desc):
 	data : array-like/string
 		data to upload or path to this data
 	data_name : string
-		name of the dataset that will be visible in the **weles** base
+		name of the dataset that will be visible in the weles base
 	data_desc : string
 		desciprtion of the data
 
@@ -29,6 +29,12 @@ def upload(data, data_name, data_desc):
 	-------
 	string
 		information if uploading data was successful
+
+	Examples
+	--------
+	datasets.upload(iris, 'iris', 'Example dataset')
+		-> user: 'example_user'
+		-> password:
 	"""
 
 	user_name = input('user: ')
@@ -89,6 +95,14 @@ def head(dataset_id, n=5):
 	-------
 	pandas.DataFrame
 		pandas DataFrame with top n rows
+
+	Examples
+	--------
+	datasets.head('aaaaaaaaaaaaaaaaaaaaaaa')
+
+	datasets.head(models.info('example_model')['data']['dataset_id'])
+
+	datasets.head('aaaaaaaaaaaaaaaaaaaaaaa', n=10)
 	"""
 
 	if not isinstance(dataset_id, str):
@@ -114,6 +128,12 @@ def get(dataset_id):
 	-------
 	pandas.DataFrame
 		pandas Data Frame containing the requested dataset
+
+	Examples
+	--------
+	datasets.get('aaaaaaaaaaaaaaaaaaaaaaa')
+
+	datasets.get(models.info('example_model')['data']['dataset_id'])
 	"""
 
 	if not isinstance(dataset_id, str):
@@ -137,6 +157,10 @@ def info(dataset_id):
 	-------
 	dict
 		dictionary contating all metadata about the dataset
+
+	Examples
+	--------
+	datasets.info('aaaaaaaaaaaaaaaaaaaaaaaa')
 	"""
 
 	if not isinstance(dataset_id, str):

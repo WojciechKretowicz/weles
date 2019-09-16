@@ -10,5 +10,6 @@ setup(name='weles',
 	install_requires=[
 		'requests',
 		'pandas',
+		'tqdm'
 	],
       zip_safe=False)
